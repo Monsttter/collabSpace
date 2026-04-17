@@ -1,12 +1,11 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-
-const socket = io("http://localhost:5000");
+import { useEffect, useRef, useState } from "react";
+import * as Y from "yjs";
+import { WebsocketProvider } from "y-websocket";
 
 export default function Editor() {
   const { id } = useParams();
-  const [content, setContent] = useState("");
+  const editorRef = useRef(null);
 
   const [email, setEmail] = useState("");
 
@@ -21,48 +20,64 @@ export default function Editor() {
         body: JSON.stringify({ document_id: id, email})
       }
     );
+    setEmail("");
 
     alert("Document shared!");
   };
 
-  const fetchDoc= async()=>{
-    try {
-      const response= await fetch(`http://localhost:5000/api/docs/${id}`, {
-        method: 'GET',
-        headers: {
-          "auth-token": localStorage.getItem("token")
-        }
-      });
-      const data= await response.json();
-      setContent(data.content);
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
-    fetchDoc();
-  }, [id]);
+    // Create Yjs doc
+    const ydoc = new Y.Doc();
 
-  // Join room
-  useEffect(() => {
-    socket.emit("join-doc", id);
-  }, [id]);
+    // Connect to WebSocket server
+    const provider = new WebsocketProvider(
+      "ws://localhost:1234",
+      id, // room id (use docId later)
+      ydoc
+    );
 
-  // Receive updates
-  useEffect(() => {
-    socket.on("receive-changes", (newContent) => {
-      // isRemoteChange.current = true;
-      console.log(1);
-      setContent(newContent);
+    const yText = ydoc.getText("quill");
+
+    // Bind to textarea
+    const textarea = editorRef.current;
+
+    // Update UI when remote changes come
+    yText.observe(() => {
+      textarea.value = yText.toString();
     });
 
-    return () => socket.off("receive-changes");
-  }, []);
+    // Update CRDT when user types
+    textarea.addEventListener("input", () => {
+      ydoc.transact(() => {
+        yText.delete(0, yText.length);
+        yText.insert(0, textarea.value);
+      });
+    });
 
-  useEffect(() => {
-    const timeout = setTimeout(async() => {
+    let initialized = false;
+
+    provider.on("sync", async(isSynced) => {
+      if (!isSynced || initialized) return;
+
+      if (yText.length === 0) {
+        const response= await fetch(`http://localhost:5000/api/docs/${id}`, {
+          method: 'GET',
+          headers: {
+            "auth-token": localStorage.getItem("token")
+          }
+        });
+        const data= await response.json();
+        ydoc.transact(() => {
+            yText.insert(0, data.content || "");
+        })
+      }
+
+      initialized = true;
+    });
+
+    const interval = setInterval(async() => {
+      const content = yText.toString();
+
       await fetch(`http://localhost:5000/api/docs/${id}`, { 
         method: 'PUT',
         headers: {
@@ -71,25 +86,15 @@ export default function Editor() {
         },
         body: JSON.stringify({content})
       });
-    }, 1000);
+    }, 2000); // every 2 sec
 
-    return () => clearTimeout(timeout);
-  }, [content]);
 
-  // Send updates
-  const handleChange = (e) => {
-    const newContent = e.target.value;
-    setContent(newContent);
-
-    // if (!isRemoteChange.current) {
-      socket.emit("send-changes", {
-        docId: id,
-        content: newContent,
-      });
-    // }
-
-    // isRemoteChange.current = false;
-  };
+    return () => {
+      clearInterval(interval);
+      provider.destroy();
+      ydoc.destroy();
+    };
+  }, []);
 
   return (
     <div className="container text-center" >
@@ -104,13 +109,10 @@ export default function Editor() {
 
         <button onClick={shareDoc}>Share</button>
       </div>
+
       <div className="card">
         <h2>Editor</h2>
-        <textarea
-          rows={15}
-          value={content}
-          onChange={handleChange}
-        />
+        <textarea ref={editorRef} rows={15} />
       </div>
     </div>
   );

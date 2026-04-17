@@ -6,10 +6,6 @@ const router = express.Router();
 
 // Get all documents for logged-in user
 router.get("/", fetchUser, async (req, res) => {
-  // const docs = await pool.query(
-  //   "SELECT * FROM documents WHERE user_id=$1 ORDER BY id DESC",
-  //   [req.user.id]
-  // );
 
   const docs = await pool.query(
   `
@@ -53,7 +49,6 @@ router.get("/:id", fetchUser, async (req, res) => {
 
 router.put("/:id", fetchUser, async (req, res) => {
   const { content } = req.body;
-  console.log(content);
 
   await pool.query(
     "UPDATE documents SET content=$1 WHERE id=$2",
