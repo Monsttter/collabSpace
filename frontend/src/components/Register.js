@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from "../api/auth";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -12,18 +13,12 @@ export default function Register() {
     if (token && token!=="undefined") {
       navigate("/");
     }
+    // eslint-disable-next-line
   }, []);
 
   const handleRegister = async () => {
     try {
-      const response= await fetch("http://localhost:5000/api/auth/signup", {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password}),
-      });
-      const data= await response.json();
+      const data= await registerUser(email, password);
 
       if(data.success){
         localStorage.setItem("token", data.token);

@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createDocument, fetchDocuments } from "../api/documents.js";
 
 export default function Home() {
   const [title, setTitle] = useState("");
   const [docs, setDocs] = useState([]);
   const navigate= useNavigate();
 
-  const token = localStorage.getItem("token");
-
   const fetchDocs= async()=>{
-    const response= await fetch("http://localhost:5000/api/docs", {
-      headers: { "auth-token": localStorage.getItem("token") },
-    });
-    const data= await response.json();
+    const data= await fetchDocuments();
     setDocs(data);
-
   }
 
   // Fetch all documents
@@ -27,17 +22,7 @@ export default function Home() {
       alert("Title is empty");
       return;
     }
-
-    const response = await fetch("http://localhost:5000/api/docs", {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-            "auth-token": localStorage.getItem("token")
-        },
-        body: JSON.stringify({ title, content: ""}),
-    });
-    const data= await response.json();
-    // setDocs([...docs, data]);
+    const data= await createDocument(title);
 
     navigate(`/doc/${data.id}`);
   };
@@ -52,7 +37,7 @@ export default function Home() {
 
       {/* Top Bar */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2>Your Documents</h2>
+        <h2>CollabSpace</h2>
         <button onClick={logout}>Logout</button>
       </div>
 
