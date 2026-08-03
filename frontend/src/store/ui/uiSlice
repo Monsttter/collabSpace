@@ -1,0 +1,11 @@
+const initialState = {
+
+    rightDrawer: null,
+
+    drawerOpen: false,
+
+    shareDialogOpen: false,
+
+    sidebarCollapsed: false,
+
+};

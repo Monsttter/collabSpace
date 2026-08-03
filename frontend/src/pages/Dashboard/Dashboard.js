@@ -6,6 +6,7 @@ import DashboardLayout from "../../layouts/DashboardLayout";
 import StatsSection from "./StatsSection";
 import RecentDocuments from "../../components/RecentDocuments/RecentDocuments";
 import ActivityFeed from "../../components/ActivityFeed/ActivityFeed";
+import Navbar from "../../components/layout/Navbar";
 
 const Dashboard = () => {
     return (
@@ -17,6 +18,7 @@ const Dashboard = () => {
                 py: 4,
             }}
         >
+
             <Box sx={{ mb: 5 }}>
                 <Typography
                     variant="h3"

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { registerUser } from "../api/auth";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,7 +19,7 @@ export default function Register() {
 
   const handleRegister = async () => {
     try {
-      const data= await registerUser(email, password);
+      const data= await registerUser(username, email, password);
 
       if(data.success){
         localStorage.setItem("token", data.token);
@@ -37,6 +38,12 @@ export default function Register() {
       <div className="auth-card">
         <h2>Create Account</h2>
 
+        <input
+          type="text"
+          placeholder="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
         <input
           placeholder="Email"
           value={email}

@@ -1,16 +1,23 @@
+import 'dotenv/config';
+
 import http from "http";
-import { WebSocketServer } from "ws";
-import {setupWSConnection} from "y-websocket/bin/utils";
+
+import { startRealtimeServer } from "./yjs/RealtimeServer.js";
 
 const server = http.createServer();
-const wss = new WebSocketServer({ server });
 
-wss.on("connection", (conn, req) => {
-  setupWSConnection(conn, req);
-});
+startRealtimeServer(server);
 
-const PORT = process.env.PORT || 1234;
+server.listen(
 
-server.listen(PORT, () => {
-  console.log("Yjs server running");
-});
+    process.env.PORT || 1234,
+
+    () =>
+
+        console.log(
+
+            "Realtime server started"
+
+        )
+
+);

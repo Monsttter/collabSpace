@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useState } from "react";
 import CollaborativeEditor from "./CollaborativeEditor";
 import { shareDocument } from "../api/documents";

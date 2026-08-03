@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { loginUser } from "../api/auth";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../store/auth/authSlice";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
+  const dispatch= useDispatch();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,7 +24,9 @@ export default function Login() {
       const data= await loginUser(email, password);
 
       if(data.success){
-        localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.data.token);
+        console.log(2, data);
+        dispatch(loginSuccess(data.data.user));
         navigate("/");
       }
       else{

@@ -1,0 +1,22 @@
+// src/layouts/DashboardLayout/DashboardLayout.styles.js
+
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+
+export const LayoutRoot = styled(Box)(({ theme }) => ({
+    display: "flex",
+    minHeight: "100vh",
+    backgroundColor: theme.palette.background.default,
+}));
+
+export const Main = styled("main")(({ theme }) => ({
+    flexGrow: 1,
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+}));
+
+export const Content = styled(Box)(({ theme }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(4),
+}));

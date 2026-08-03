@@ -8,12 +8,18 @@ import {
 
 import Sidebar from "../../components/layout/Sidebar";
 import Navbar from "../../components/layout/Navbar";
+import EditorSidebar from "../../components/EditorSidebar/EditorSidebar";
+import EditorLayout from "../../components/Editor/EditorLayout";
+// import EditorLayout from "../../components/EditorSidebar/EditorLayout";
 
 const DashboardLayout = ({ children }) => {
     return (
         <LayoutRoot>
 
-            <Sidebar />
+            {/* <Sidebar /> */}
+            <EditorSidebar />
+            {/* <EditorLayout /> */}
+
 
             <Main>
 

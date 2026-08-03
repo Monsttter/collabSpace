@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { createDocument, fetchDocuments } from "../api/documents.js";
 
 export default function Home() {
@@ -29,6 +29,7 @@ export default function Home() {
 
   const logout = () => {
     localStorage.removeItem("token");
+    // dispatch(logout());
     navigate("/login");
   };
 
