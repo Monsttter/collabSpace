@@ -15,16 +15,23 @@ import {
     Link,
     Code,
     Image,
+    Comment,
 } from "@mui/icons-material";
 
 import HeadingSelect from "./HeadingSelect";
 import ToolbarButton from "./ToolbarButton";
 import ToolbarOverflow from "./ToolbarOverflow";
+import { openDrawer } from "../../../store/ui/uiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedRange } from "../../../store/comments/commentsSlice";
 
 export default function FloatingToolbar({
-    editor,
-    drawerOpen,
+    editor
 }) {
+
+    const drawer= useSelector(state => state.ui.drawer);
+    const dispatch = useDispatch();
+
     if (!editor) return null;
 
     return (
@@ -80,6 +87,7 @@ export default function FloatingToolbar({
                     editor.chain().focus().redo().run()
                 }
             />
+
 
             <Divider orientation="vertical" flexItem />
 
@@ -219,8 +227,40 @@ export default function FloatingToolbar({
             />
 
             {/* Hidden when drawer opens */}
+            <ToolbarButton
+                title="comment"
+                icon={Comment}
+                onClick={() =>{
 
-            {!drawerOpen && (
+                    const { from, to } = editor.state.selection;
+
+                    dispatch(
+
+                        setSelectedRange({
+
+                            anchor: from,
+
+                            head: to,
+
+                            text: editor.state.doc.textBetween(
+
+                                from,
+
+                                to,
+
+                                " "
+
+                            ),
+
+                        })
+
+                    );
+
+                    dispatch(openDrawer("comments"));
+                }}
+            />
+
+            {!drawer && (
                 <>
                     <ToolbarButton
                         title="Code Block"
@@ -247,7 +287,7 @@ export default function FloatingToolbar({
 
             <ToolbarOverflow
                 editor={editor}
-                drawerOpen={drawerOpen}
+                drawerOpen={drawer}
             />
         </Box>
     );

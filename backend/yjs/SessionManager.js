@@ -17,6 +17,7 @@ class SessionManager {
     getOrCreate(documentId) {
 
     let session = this.sessions.get(documentId);
+    console.log(documentId);
 
     if (session) {
 

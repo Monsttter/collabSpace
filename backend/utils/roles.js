@@ -4,8 +4,6 @@ export const Roles = {
 
     EDITOR: "editor",
 
-    COMMENTER: "commenter",
-
     VIEWER: "viewer"
 
 };

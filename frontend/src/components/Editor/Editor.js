@@ -9,18 +9,17 @@ import { setCurrentDocument } from "../../store/documents/documentSlice";
 import useCollaboration from "./hooks/useCollaboration";
 import { CollaborationProvider } from "./context/CollaborationContext";
 
+import "../../styles/collaborationCursor.css";
+
 export default function Editor() {
 
   const {id: docId}= useParams();
   
-  const collaboration = useCollaboration(docId);
+  const collaboration = useCollaboration();
 
-if (
-    !collaboration.editor ||
-    !collaboration.provider
-) {
-    return <div>Loading editor...</div>;
-}
+  if (!collaboration.ready) {
+    return <div>Loading...</div>;
+  }
 
   return (
   <CollaborationProvider

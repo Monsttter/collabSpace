@@ -13,20 +13,38 @@ import { useEffect, useState } from "react";
 
 import "../../styles/editor.css"
 import { updateDocument } from "../../api/documents";
-import RightDock from "./RightDock/RightDock";
+import RightDock from "./RightDock";
 import EditorWorkspace from "./EditorWorkspace";
 import DrawerPanel from "./RightDrawer/DrawerPanel";
 import ShareDialog from "./ShareDialog";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { useCollaborationContext } from "./context/CollaborationContext";
+import useCollaborativeEditor from "./hooks/useCollaborativeEditor";
+import useCommentSocket from "./hooks/useCommentSocket";
 
-export default function EditorLayout({ ydoc, provider }) {
+export default function EditorLayout() {
 
     const {id: docId}= useParams();
-    const [users, setUsers] = useState([]);
-    const [drawer, setDrawer] = useState(null);
+    const drawer= useSelector(state => state.ui.drawer);
     const [shareOpen, setShareOpen] = useState(false);
     const document = useSelector(state => state.documents.currentDocument);
+
+    useCommentSocket(docId);
+
+    const {
+
+        provider,
+
+        ydoc
+
+    } = useCollaborationContext();
+
+    const editor =
+    useCollaborativeEditor(
+        ydoc,
+        provider
+    );
 
     return (
 
@@ -51,19 +69,17 @@ export default function EditorLayout({ ydoc, provider }) {
                 >
                     <EditorWorkspace
                         key= {docId}
-                        drawerOpen={Boolean(drawer)}
+                        editor={editor}
                     />
 
                     {drawer && (
                         <DrawerPanel
-                            drawer={drawer}
+                            editor={editor}
                             openShareDialog={() => setShareOpen(true)}
                         />
                     )}
 
                     <RightDock
-                        drawer={drawer}
-                        setDrawer={setDrawer}
                     />
                 </Box>
 

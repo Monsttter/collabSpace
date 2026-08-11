@@ -4,14 +4,37 @@ import {
     Divider,
 } from "@mui/material";
 
-import CommentInput from "./CommentInput";
 import CommentThread from "./CommentThread";
+import { useDispatch, useSelector } from "react-redux";
+import { X } from "lucide-react";
+import { clearPendingSelection, closeDrawer } from "../../../../store/ui/uiSlice";
+import CommentComposer from "./CommentComposer";
+import CommentList from "./CommentList";
+import { fetchComments } from "../../../../store/comments/commentsThunks";
+import { useEffect } from "react";
+import { useParams } from "react-router";
 
-export default function CommentsPanel() {
+export default function CommentsPanel({editor}) {
+
+    const { id: documentId } = useParams();
+    const dispatch= useDispatch();
+    const pendingSelection= useSelector(state => state.ui.pendingSelection);
+    
+    const handleClose= ()=>{
+        dispatch(closeDrawer());
+        dispatch(clearPendingSelection());
+    }
+
+    useEffect(() => {
+
+        dispatch(fetchComments(documentId));
+
+    }, [dispatch, documentId]);
 
     return (
         <Box
             sx={{
+                flex: 1,
                 display: "flex",
                 flexDirection: "column",
                 height: "100%",
@@ -25,12 +48,21 @@ export default function CommentsPanel() {
                     borderBottom: "1px solid #E5E7EB",
                 }}
             >
-                <Typography
-                    variant="h6"
-                    fontWeight={600}
-                >
-                    Comments
-                </Typography>
+                <Box sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+            }}>
+                    <Typography
+                        variant="h6"
+                        fontWeight={600}
+                    >
+                        Comments
+                    </Typography>
+                    <X cursor="pointer" onClick={handleClose}/>
+
+                </Box>
+
 
                 <Typography
                     variant="body2"
@@ -40,26 +72,11 @@ export default function CommentsPanel() {
                 </Typography>
             </Box>
 
-            <Box
-                sx={{
-                    flex: 1,
-                    overflowY: "auto",
-                    px: 2,
-                    py: 2,
-                }}
-            >
-
-                <CommentThread />
-
-                <CommentThread />
-
-                <CommentThread />
-
-            </Box>
+            <CommentList editor={editor}/>
 
             <Divider />
 
-            <CommentInput />
+            <CommentComposer editor={editor}/>
 
 
         </Box>

@@ -6,6 +6,10 @@ import {
     PING_TIMEOUT
 } from "./constants.js";
 
+import * as awarenessProtocol from "y-protocols/awareness";
+
+const connectionClientIds = new WeakMap();
+
 export function startRealtimeServer(server) {
 
     const wss = new WebSocketServer({
@@ -20,10 +24,20 @@ export function startRealtimeServer(server) {
 
         async(conn, req) => {
 
+            const url =
+            new URL(
+                req.url,
+                `http://${req.headers.host}`
+            );
+
             const documentId =
-                req.url
-                    .slice(1)
-                    .split("?")[0];
+                url.pathname
+                .slice(1);
+
+            const channel =
+            url.searchParams.get(
+                "channel"
+            );
 
             const session =
                 SessionManager.getOrCreate(
@@ -33,15 +47,52 @@ export function startRealtimeServer(server) {
                 );
                 await session.initialize();
 
+            /*
+         * ------------------------------------------------
+         * Comment realtime connection
+         * ------------------------------------------------
+         */
+
+        if (channel === "comments") {
+
+            session.addCommentConnection(
+                conn
+            );
+
+
+            conn.on(
+                "close",
+                () => {
+
+                    session.removeCommentConnection(
+                        conn
+                    );
+
+                }
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+         * ------------------------------------------------
+         * Normal Yjs connection
+         * ------------------------------------------------
+         */
+
             session.addConnection(conn);
 
-            const {
+            connectionClientIds.set(conn, new Set());
 
-                doc,
+            conn.clientIds = new Set();
 
-                messageHandler
+            const { doc } = session;
 
-            } = session;
+            const messageHandler = session.messageHandler;
+            messageHandler.connectionClientIds = connectionClientIds;
 
             /*
             |--------------------------------------------------------------------------
@@ -142,36 +193,28 @@ export function startRealtimeServer(server) {
             |--------------------------------------------------------------------------
             */
 
-            let pong = true;
+            conn.isAlive = true;
 
-            const pingInterval =
-                setInterval(() => {
+conn.on("pong", () => {
 
-                    if (!pong) {
+    conn.isAlive = true;
 
-                        conn.terminate();
+});
 
-                        return;
+const pingInterval = setInterval(() => {
 
-                    }
+    if (!conn.isAlive) {
 
-                    pong = false;
+        conn.terminate();
+        return;
 
-                    conn.ping();
+    }
 
-                }, PING_TIMEOUT);
+    conn.isAlive = false;
 
-            conn.on(
+    conn.ping();
 
-                "pong",
-
-                () => {
-
-                    pong = true;
-
-                }
-
-            );
+}, PING_TIMEOUT);
 
             /*
             |--------------------------------------------------------------------------
@@ -192,6 +235,22 @@ export function startRealtimeServer(server) {
 
                     );
 
+                    if (conn.clientIds.size > 0) {
+
+                        awarenessProtocol.removeAwarenessStates(
+
+                            doc.awareness,
+
+                            [...conn.clientIds],
+
+                            null
+
+                        );
+
+                    }
+
+                    session.removeConnection(conn);
+
                     doc.off(
 
                         "update",
@@ -207,6 +266,23 @@ export function startRealtimeServer(server) {
                         awarenessListener
 
                     );
+
+                    const ids =
+                        connectionClientIds.get(conn);
+
+                    if (ids && ids.size > 0) {
+
+                        awarenessProtocol.removeAwarenessStates(
+
+                            doc.awareness,
+
+                            [...ids],
+
+                            null
+
+                        );
+
+                    }
 
                     session.removeConnection(
 

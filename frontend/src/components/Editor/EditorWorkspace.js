@@ -5,21 +5,15 @@ import EditorToolbar from "./EditorToolbar";
 import FloatingToolbar from "./Toolbar/FloatingToolbar";
 import CollaborativeEditor from "./CollaborativeEditor";
 import { useParams } from "react-router";
-import { useCollaborationContext } from "./context/CollaborationContext";
+import { useSelector } from "react-redux";
 
-export default function EditorWorkspace({ drawerOpen }) {
+export default function EditorWorkspace({editor}) {
     
     const { id: docId } = useParams();
 
-    const {
+    const drawer= useSelector(state => state.ui.drawer);
 
-        editor,
-
-        provider,
-
-    } = useCollaborationContext();
-
-    if (!editor || !provider) {
+    if (!editor) {
 
         return <div>Loading editor...</div>;
 
@@ -39,11 +33,11 @@ export default function EditorWorkspace({ drawerOpen }) {
     >
       <Box
         sx={{
-          maxWidth: drawerOpen ? 900 : 1050,
+          maxWidth: drawer ? 900 : 1050,
           mx: "auto",
         }}
       >
-        <FloatingToolbar editor={editor} drawerOpen={drawerOpen} />
+        <FloatingToolbar editor={editor} />
 
         <CollaborativeEditor key={docId} editor={editor} />
       </Box>

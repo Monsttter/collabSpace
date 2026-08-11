@@ -35,10 +35,10 @@ export default class MessageHandler {
         const type =
         decoding.readVarUint(decoder);
         
-        console.log(
-    "Incoming type:",
-    type
-);
+//         console.log(
+//     "Incoming type:",
+//     type
+// );
         switch (type) {
             
             case MESSAGE_SYNC:
@@ -79,23 +79,43 @@ export default class MessageHandler {
 
                 break;
 
-            case MESSAGE_AWARENESS:
+            case MESSAGE_AWARENESS: {
+
+                const update =
+                    decoding.readVarUint8Array(decoder);
 
                 awarenessProtocol.applyAwarenessUpdate(
 
                     this.doc.awareness,
 
-                    decoding.readVarUint8Array(
-
-                        decoder
-
-                    ),
+                    update,
 
                     conn
 
                 );
 
+                // Track every awareness client currently owned
+                // by this websocket.
+                const ids =
+                    this.connectionClientIds.get(conn);
+
+                ids.clear();
+
+                this.doc.awareness.getStates().forEach((_, clientId) => {
+
+                    const meta =
+                        this.doc.awareness.meta.get(clientId);
+
+                    if (meta) {
+
+                        ids.add(clientId);
+
+                    }
+
+                });
+
                 break;
+            }
 
         }
 
@@ -109,36 +129,65 @@ export default class MessageHandler {
 
     sendSyncStep1(conn) {
 
-        const encoder =
-            encoding.createEncoder();
+    // -----------------------------
+    // Send document state
+    // -----------------------------
 
-        encoding.writeVarUint(
+    const syncEncoder = encoding.createEncoder();
 
-            encoder,
+    encoding.writeVarUint(
+        syncEncoder,
+        MESSAGE_SYNC
+    );
 
-            MESSAGE_SYNC
+    syncProtocol.writeSyncStep1(
+        syncEncoder,
+        this.doc
+    );
 
+    conn.send(
+        encoding.toUint8Array(syncEncoder)
+    );
+
+    // -----------------------------
+    // Send existing awareness
+    // -----------------------------
+
+    const awarenessStates =
+        Array.from(
+            this.doc.awareness.getStates().keys()
         );
 
-        syncProtocol.writeSyncStep1(
+    if (awarenessStates.length === 0)
+        return;
 
-            encoder,
+//     console.log(
+//     "Initial awareness:",
+//     awarenessStates
+// );
 
-            this.doc
+    const awarenessEncoder =
+        encoding.createEncoder();
 
-        );
+    encoding.writeVarUint(
+        awarenessEncoder,
+        MESSAGE_AWARENESS
+    );
 
-        conn.send(
+    encoding.writeVarUint8Array(
+        awarenessEncoder,
+        awarenessProtocol.encodeAwarenessUpdate(
+            this.doc.awareness,
+            awarenessStates
+        )
+    );
 
-            encoding.toUint8Array(
-
-                encoder
-
-            )
-
-        );
-
-    }
+    conn.send(
+        encoding.toUint8Array(
+            awarenessEncoder
+        )
+    );
+}
 
     /*
     |--------------------------------------------------------------------------
@@ -148,18 +197,18 @@ export default class MessageHandler {
 
     broadcastUpdate(update) {
 
-        console.log(
-    "Broadcasting update to",
-    this.session.connections.size,
-    "clients"
-);
+//         console.log(
+//     "Broadcasting update to",
+//     this.session.connections.size,
+//     "clients"
+// );
 
 for (const conn of this.session.connections) {
 
-    console.log(
-        "readyState:",
-        conn.readyState
-    );
+    // console.log(
+    //     "readyState:",
+    //     conn.readyState
+    // );
 
 }
 
@@ -209,48 +258,66 @@ for (const conn of this.session.connections) {
 
     broadcastAwareness(clientIds) {
 
-        const encoder =
-            encoding.createEncoder();
+    // console.log(
+    //     "Broadcast awareness:",
+    //     clientIds
+    // );
 
-        encoding.writeVarUint(
+    const encoder =
+        encoding.createEncoder();
 
-            encoder,
+    encoding.writeVarUint(
 
-            MESSAGE_AWARENESS
+        encoder,
+
+        MESSAGE_AWARENESS
+
+    );
+
+    const update =
+        awarenessProtocol.encodeAwarenessUpdate(
+
+            this.doc.awareness,
+
+            clientIds
 
         );
 
-        encoding.writeVarUint8Array(
+    // console.log(
+    //     "Encoded awareness length:",
+    //     update.length
+    // );
 
-            encoder,
+    encoding.writeVarUint8Array(
 
-            awarenessProtocol.encodeAwarenessUpdate(
+        encoder,
 
-                this.doc.awareness,
+        update
 
-                clientIds
+    );
 
-            )
+    const message =
+        encoding.toUint8Array(
+
+            encoder
 
         );
 
-        const message =
-            encoding.toUint8Array(
+    // console.log(
+    //     "Broadcast packet length:",
+    //     message.length
+    // );
 
-                encoder
+    for (const conn of this.session.connections) {
 
-            );
+        if (conn.readyState === 1) {
 
-        for (const conn of this.session.connections) {
-
-            if (conn.readyState === 1) {
-
-                conn.send(message);
-
-            }
+            conn.send(message);
 
         }
 
     }
+
+}
 
 }

@@ -7,9 +7,7 @@ import { Box } from "@mui/material";
 // import EditorLayout from "../../components/editor/EditorLayout";
 import EditorSidebar from "../../components/EditorSidebar/EditorSidebar";
 import Editor from "../../components/Editor/Editor";
-import RightDock from "../../components/Editor/RightDock/RightDock";
 import { useParams } from "react-router";
-// import RightDock from "../components/editor/RightDock";
 
 export default function EditorPage() {
 

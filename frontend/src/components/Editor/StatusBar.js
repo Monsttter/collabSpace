@@ -10,7 +10,7 @@ export default function StatusBar() {
             connectionStatus
     
         } = useCollaborationContext();
-        console.log(users);
+        // console.log(users);
 
     return (
         <Box

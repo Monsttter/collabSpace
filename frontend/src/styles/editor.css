@@ -92,6 +92,12 @@
     padding:12px;
 }
 
+.comment-soft-highlight {
+    background: rgba(255, 214, 79, 0.35);
+    border-radius: 3px;
+    transition: background 0.15s ease;
+}
+
 /* .ProseMirror {
     outline: none;
     font-size: 18px;

@@ -7,6 +7,8 @@ import shareRoutes from "./routes/shareRoutes.js";
 import http from "http";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import pool from "./config/db.js";
+import commentRoutes from "./routes/commentRoutes.js";
+import { startRealtimeServer } from "./yjs/RealtimeServer.js";
 
 const app = express();
 app.use(cors());
@@ -14,11 +16,13 @@ app.use(express.json());
 app.set("trust proxy", 1);
 
 const server = http.createServer(app);
+startRealtimeServer(server);
 
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/documents", documentRoutes);
 app.use("/api/documents", shareRoutes);
+app.use("/api", commentRoutes);
 
 app.use(errorMiddleware);
 
