@@ -1,5 +1,5 @@
 import { useEditor } from "@tiptap/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Collaboration from "@tiptap/extension-collaboration";
 import TextAlign from "@tiptap/extension-text-align";
@@ -18,6 +18,24 @@ export default function useCollaborativeEditor() {
 
     const comments= useSelector(selectComments);
 
+    const document = useSelector(
+        state => state.documents.currentDocument
+    );
+
+    const user= useSelector(state => state.auth.user);
+    
+    const collaborators = useSelector(
+        state => state.collaborators.collaborators
+    );
+
+    const currentUser = collaborators.find(
+        collaborator =>
+            String(collaborator.id) ===
+            String(user?.id)
+    );
+
+    const role = currentUser?.role;
+
     const dispatch= useDispatch();
 
     const {
@@ -33,9 +51,12 @@ export default function useCollaborativeEditor() {
             ? {
                   immediatelyRender: false,
 
+                  editable: role !== "viewer",
+
                   extensions: [
                       StarterKit.configure({
                           history: false,
+                          undoRedo: false,
                       }),
 
                       Collaboration.configure({
@@ -65,6 +86,12 @@ export default function useCollaborativeEditor() {
             : null,
         [provider]
     );
+
+    useEffect(() => {
+        if (!editor) return;
+
+        editor.setEditable(role !== "viewer");
+    }, [editor, role]);
 
     useEffect(() => {
 

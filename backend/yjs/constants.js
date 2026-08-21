@@ -7,3 +7,5 @@ export const PING_TIMEOUT = 3000;
 export const WS_CONNECTING = 0;
 
 export const WS_OPEN = 1;
+
+export const EVENT_DOCUMENT_RESTORED = "document-restored";

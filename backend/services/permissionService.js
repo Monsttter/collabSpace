@@ -27,7 +27,7 @@ export async function requireRole(
             403,
 
             "Access denied"
-
+            
         );
 
     if(

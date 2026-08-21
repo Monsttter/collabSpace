@@ -5,7 +5,6 @@ import EditorToolbar from "./EditorToolbar";
 import EditorContent from "./CollaborativeEditor";
 import BottomStatusBar from "./BottomStatusBar";
 
-import Collaboration from "@tiptap/extension-collaboration";
 import { useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
@@ -17,26 +16,39 @@ import RightDock from "./RightDock";
 import EditorWorkspace from "./EditorWorkspace";
 import DrawerPanel from "./RightDrawer/DrawerPanel";
 import ShareDialog from "./ShareDialog";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useCollaborationContext } from "./context/CollaborationContext";
 import useCollaborativeEditor from "./hooks/useCollaborativeEditor";
-import useCommentSocket from "./hooks/useCommentSocket";
+import { fetchCollaborators } from "../../store/collaborators/collaboratorsThunks";
+import AccessRevokedScreen from "./AccessRevokedScreen";
 
 export default function EditorLayout() {
 
-    const {id: docId}= useParams();
+    const {id: documentId}= useParams();
     const drawer= useSelector(state => state.ui.drawer);
     const [shareOpen, setShareOpen] = useState(false);
     const document = useSelector(state => state.documents.currentDocument);
 
-    useCommentSocket(docId);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+
+        if (!documentId) return;
+
+        dispatch(
+            fetchCollaborators(documentId)
+        );
+
+    }, [documentId, dispatch]);
 
     const {
 
         provider,
 
-        ydoc
+        ydoc,
+
+        accessRevoked
 
     } = useCollaborationContext();
 
@@ -45,6 +57,12 @@ export default function EditorLayout() {
         ydoc,
         provider
     );
+
+    if (accessRevoked) {
+  return (
+     <AccessRevokedScreen />
+);
+}
 
     return (
 
@@ -68,7 +86,7 @@ export default function EditorLayout() {
                     }}
                 >
                     <EditorWorkspace
-                        key= {docId}
+                        key= {documentId}
                         editor={editor}
                     />
 

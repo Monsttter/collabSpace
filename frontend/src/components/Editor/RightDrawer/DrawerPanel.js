@@ -5,6 +5,7 @@ import CollaboratorsPanel from "./CollaboratorsDrawer/CollaboratorsPanel";
 import HistoryPanel from "./HistoryDrawer/HistoryPanel";
 import AIPanel from "./AIDrawer/AIPanel";
 import { useSelector } from "react-redux";
+import VersionHistory from "./HistoryDrawer/VersionHistory";
 // import AIPanel from "./AIPanel";
 
 export default function DrawerPanel({ editor, openShareDialog }) {
@@ -14,7 +15,8 @@ export default function DrawerPanel({ editor, openShareDialog }) {
     const panels = {
         comments: <CommentsPanel editor={editor}/>,
         collaborators: <CollaboratorsPanel openShareDialog={openShareDialog} />,
-        history: <HistoryPanel/>,
+        // history: <HistoryPanel/>,
+        history: <VersionHistory/>,
         ai: <AIPanel/>,
     };
 

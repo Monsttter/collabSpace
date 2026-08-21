@@ -3,9 +3,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice";
 import documentReducer from "./documents/documentSlice";
 // import editorReducer from "../features/editor/editorSlice";
-// import collaboratorReducer from "../features/collaborators/collaboratorSlice";
+import collaboratorsReducer from "./collaborators/collaboratorsSlice";
 import commentsReducer from "./comments/commentsSlice";
 import uiReducer from "./ui/uiSlice";
+import versionsReducer from "./versions/versionSlice";
 // import workspaceReducer from "../features/workspace/workspaceSlice";
 // import notificationReducer from "../features/notifications/notificationSlice";
 // import aiReducer from "../features/ai/aiSlice";
@@ -20,9 +21,11 @@ export const store = configureStore({
 
         // editor:editorReducer,
 
-        // collaborators:collaboratorReducer,
+        collaborators:collaboratorsReducer,
 
         comments:commentsReducer,
+
+        versions: versionsReducer,
 
         ui:uiReducer,
 

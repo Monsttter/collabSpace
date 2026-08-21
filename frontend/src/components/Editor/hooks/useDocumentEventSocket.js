@@ -1,21 +1,10 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-
-import {
-    realtimeCommentEvent,
-} from "../../../store/comments/commentsSlice";
-
-import {
-    handleCollaboratorEvent
-} from "../../../store/collaborators/collaboratorsSlice";
 
 
-export default function useCommentSocket(
-    documentId
+export default function useDocumentEventSocket(
+    documentId,
+    onEvent
 ) {
-
-    const dispatch = useDispatch();
-
 
     useEffect(() => {
 
@@ -43,55 +32,42 @@ export default function useCommentSocket(
         let reconnectAttempts =
             0;
 
-        let accessRevoked = false;
+        let accessRevoked =
+            false;
 
-
-        /*
-         * ------------------------------------------------
-         * Reconnect configuration
-         * ------------------------------------------------
-         */
 
         const BASE_DELAY = 1000;
 
         const MAX_DELAY = 10000;
 
 
-        /*
-         * ------------------------------------------------
-         * Create socket
-         * ------------------------------------------------
-         */
-
         const connect = () => {
 
-            if (intentionallyClosed || accessRevoked) {
+            if (
+                intentionallyClosed ||
+                accessRevoked
+            ) {
+
                 return;
+
             }
 
 
-            const url =
-                `${baseUrl}/${documentId}` +
-                `?channel=comments` +
-                `&token=${encodeURIComponent(token)}`;
-
-
             socket =
-                new WebSocket(url);
+                new WebSocket(
+                    `${baseUrl}/${documentId}` +
+                    `?channel=events` +
+                    `&token=${encodeURIComponent(token)}`
+                );
 
 
             socket.onopen = () => {
 
                 console.log(
-                    "Comment socket connected:",
+                    "Document event socket connected:",
                     documentId
                 );
 
-
-                /*
-                 * Reset backoff after a successful
-                 * connection.
-                 */
 
                 reconnectAttempts = 0;
 
@@ -102,43 +78,18 @@ export default function useCommentSocket(
 
                 try {
 
-                    const message =
+                    const data =
                         JSON.parse(
                             event.data
                         );
 
 
-                    if (
-                        message.type ===
-                        "comment"
-                    ) {
-
-                        dispatch(
-                            realtimeCommentEvent(
-                                message.event
-                            )
-                        );
-
-                    }
-
-
-                    if (
-                        message.type ===
-                        "collaborator"
-                    ) {
-
-                        dispatch(
-                            handleCollaboratorEvent(
-                                message.event
-                            )
-                        );
-
-                    }
+                    onEvent(data);
 
                 } catch (error) {
 
                     console.error(
-                        "Invalid comment socket message:",
+                        "Invalid document event:",
                         error
                     );
 
@@ -150,18 +101,18 @@ export default function useCommentSocket(
             socket.onerror = error => {
 
                 /*
-                 * WebSocket will normally fire
-                 * onclose after onerror.
-                 *
                  * Don't reconnect here.
+                 *
+                 * onclose handles reconnect.
                  */
 
                 if (
-                    !intentionallyClosed
+                    !intentionallyClosed &&
+                    !accessRevoked
                 ) {
 
                     console.error(
-                        "Comment socket error:",
+                        "Document event socket error:",
                         error
                     );
 
@@ -170,15 +121,24 @@ export default function useCommentSocket(
             };
 
 
-            socket.onclose = (event) => {
+            socket.onclose = event => {
 
                 if (
-                    intentionallyClosed
+                    intentionallyClosed ||
+                    accessRevoked
                 ) {
 
                     return;
 
                 }
+
+
+                /*
+                 * 1008 = authorization/access
+                 * violation.
+                 *
+                 * DO NOT reconnect.
+                 */
 
                 if (
                     event.code === 1008
@@ -186,10 +146,12 @@ export default function useCommentSocket(
 
                     accessRevoked = true;
 
+
                     console.log(
-                        "Comment socket access revoked:",
+                        "Document event socket access revoked:",
                         documentId
                     );
+
 
                     return;
 
@@ -197,8 +159,9 @@ export default function useCommentSocket(
 
 
                 console.log(
-                    "Comment socket disconnected:",
-                    documentId
+                    "Document event socket disconnected:",
+                    documentId,
+                    event.code
                 );
 
 
@@ -209,24 +172,11 @@ export default function useCommentSocket(
         };
 
 
-        /*
-         * ------------------------------------------------
-         * Schedule reconnect
-         * ------------------------------------------------
-         */
-
         const scheduleReconnect = () => {
 
             if (
-                intentionallyClosed || accessRevoked || reconnectTimer !== null
-            ) {
-
-                return;
-
-            }
-
-
-            if (
+                intentionallyClosed ||
+                accessRevoked ||
                 reconnectTimer !== null
             ) {
 
@@ -249,11 +199,6 @@ export default function useCommentSocket(
             reconnectAttempts++;
 
 
-            console.log(
-                `Reconnecting comment socket in ${delay}ms`
-            );
-
-
             reconnectTimer =
                 setTimeout(
                     () => {
@@ -270,20 +215,8 @@ export default function useCommentSocket(
         };
 
 
-        /*
-         * ------------------------------------------------
-         * Initial connection
-         * ------------------------------------------------
-         */
-
         connect();
 
-
-        /*
-         * ------------------------------------------------
-         * Cleanup
-         * ------------------------------------------------
-         */
 
         return () => {
 
@@ -299,8 +232,7 @@ export default function useCommentSocket(
                     reconnectTimer
                 );
 
-                reconnectTimer =
-                    null;
+                reconnectTimer = null;
 
             }
 
@@ -326,7 +258,7 @@ export default function useCommentSocket(
 
     }, [
         documentId,
-        dispatch
+        onEvent
     ]);
 
 }

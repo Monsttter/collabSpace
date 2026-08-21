@@ -58,7 +58,7 @@ export async function addMember(
 
 ){
 
-    const { rows } = await pool.query(
+    await pool.query(
 
         `
 
@@ -86,8 +86,6 @@ export async function addMember(
 
         )
 
-        RETURNING *
-
         `,
 
         [
@@ -104,6 +102,53 @@ export async function addMember(
 
     );
 
+    
+    const { rows } = await pool.query(
+        
+        `
+        
+        SELECT
+        
+        u.id,
+        
+        u.username,
+        
+        u.email,
+        
+        u.avatar_url,
+        
+        dm.role,
+        
+        dm.favorite,
+
+        dm.pinned,
+        
+        dm.joined_at
+        
+        FROM users u
+        
+        INNER JOIN document_members dm
+        
+        ON
+        
+        u.id=dm.user_id
+        
+        WHERE
+
+        dm.document_id=$1 AND
+        
+        dm.user_id=$2
+        
+        `,
+        
+        [
+            documentId,
+            
+            userId
+            
+        ]
+        
+    );
     return rows[0];
 
 }
@@ -174,7 +219,7 @@ export async function getMembers(
 
         u.id,
 
-        u.name,
+        u.username,
 
         u.email,
 
@@ -214,7 +259,7 @@ export async function getMembers(
 
         END,
 
-        u.name
+        u.username
 
         `,
 
@@ -246,7 +291,7 @@ export async function updateRole(
 
 ){
 
-    const { rows } = await pool.query(
+    await pool.query(
 
         `
 
@@ -262,8 +307,6 @@ export async function updateRole(
 
         user_id=$2
 
-        RETURNING *
-
         `,
 
         [
@@ -276,6 +319,53 @@ export async function updateRole(
 
         ]
 
+    );
+
+    const { rows } = await pool.query(
+        
+        `
+        
+        SELECT
+        
+        u.id,
+        
+        u.username,
+        
+        u.email,
+        
+        u.avatar_url,
+        
+        dm.role,
+        
+        dm.favorite,
+
+        dm.pinned,
+        
+        dm.joined_at
+        
+        FROM users u
+        
+        INNER JOIN document_members dm
+        
+        ON
+        
+        u.id=dm.user_id
+        
+        WHERE
+
+        dm.document_id=$1 AND
+        
+        dm.user_id=$2
+        
+        `,
+        
+        [
+            documentId,
+            
+            userId
+            
+        ]
+        
     );
 
     return rows[0];

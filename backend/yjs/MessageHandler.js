@@ -41,43 +41,74 @@ export default class MessageHandler {
 // );
         switch (type) {
             
-            case MESSAGE_SYNC:
-                
+            case MESSAGE_SYNC: {
+
+                /*
+                * Check the Yjs message type without consuming
+                * the decoder that will actually be used by Yjs.
+                */
+                const inspectionDecoder =
+                    decoding.createDecoder(message);
+
+                // Skip our application-level MESSAGE_SYNC
+                decoding.readVarUint(inspectionDecoder);
+
+                // Read Yjs sync message type
+                const syncMessageType =
+                    decoding.readVarUint(inspectionDecoder);
+
+
+                /*
+                * Viewers are not allowed to send document updates.
+                *
+                * IMPORTANT:
+                * We check this BEFORE readSyncMessage(),
+                * because readSyncMessage() would apply the
+                * update to the Y.Doc.
+                */
+                if (
+                    conn.role === "viewer" &&
+                    syncMessageType ===
+                        syncProtocol.messageYjsUpdate
+                ) {
+
+                    console.log(
+                        "Blocked document update from viewer:",
+                        conn.user?.id
+                    );
+
+                    break;
+                }
+
+
+                /*
+                * Existing working Yjs logic.
+                */
                 encoding.writeVarUint(
-                    
                     encoder,
-                    
                     MESSAGE_SYNC
-                    
                 );
-                
+
                 syncProtocol.readSyncMessage(
-                    
                     decoder,
-                    
                     encoder,
-                    
                     this.doc,
-                    
                     conn
-                    
                 );
-                
+
+
                 if (encoding.length(encoder) > 1) {
 
                     conn.send(
-
                         encoding.toUint8Array(
-
                             encoder
-
                         )
-
                     );
 
                 }
 
                 break;
+            }
 
             case MESSAGE_AWARENESS: {
 

@@ -37,6 +37,7 @@ export default function EditorWorkspace({editor}) {
           mx: "auto",
         }}
       >
+
         <FloatingToolbar editor={editor} />
 
         <CollaborativeEditor key={docId} editor={editor} />

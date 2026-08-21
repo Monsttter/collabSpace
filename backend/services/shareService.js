@@ -113,8 +113,6 @@ export async function getCollaborators(
 
             Roles.EDITOR,
 
-            Roles.COMMENTER,
-
             Roles.VIEWER
 
         ]

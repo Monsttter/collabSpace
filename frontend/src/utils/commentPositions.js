@@ -122,7 +122,7 @@ export function resolveCommentPositions(
             head,
             mapping
         );
-    console.log(anchorAbsolute, headAbsolute);
+    // console.log(anchorAbsolute, headAbsolute);
 
 
     if (

@@ -8,6 +8,12 @@ import {
 
 import * as awarenessProtocol from "y-protocols/awareness";
 
+import { authenticateWebSocket }
+    from "./wsAuth.js";
+
+import * as repository
+    from "../repositories/documentRepository.js";
+
 const connectionClientIds = new WeakMap();
 
 export function startRealtimeServer(server) {
@@ -34,10 +40,53 @@ export function startRealtimeServer(server) {
                 url.pathname
                 .slice(1);
 
+            /*
+            * Authenticate user
+            */
+            const user =
+                authenticateWebSocket(req);
+
+            if (!user) {
+
+                conn.close(
+                    1008,
+                    "Authentication failed"
+                );
+
+                return;
+            }
+
+            /*
+            * Check document membership
+            */
+            const member =
+                await repository.getMember(
+                    documentId,
+                    user.id
+                );
+
+            if (!member) {
+
+                conn.close(
+                    1008,
+                    "Access denied"
+                );
+
+                return;
+            }
+
+            /*
+            * Store authenticated user/role
+            * on this WebSocket connection.
+            */
+            conn.user = user;
+
+            conn.role = member.role;
+
             const channel =
             url.searchParams.get(
                 "channel"
-            );
+            ) || "yjs";
 
             const session =
                 SessionManager.getOrCreate(
@@ -45,7 +94,7 @@ export function startRealtimeServer(server) {
                     documentId
 
                 );
-                await session.initialize();
+            await session.initialize();
 
             /*
          * ------------------------------------------------
@@ -55,25 +104,89 @@ export function startRealtimeServer(server) {
 
         if (channel === "comments") {
 
-            session.addCommentConnection(
-                conn
-            );
+            session.addCommentConnection(conn);
+
+            /*
+            * Heartbeat
+            */
+            conn.isAlive = true;
+
+            conn.on("pong", () => {
+                conn.isAlive = true;
+            });
+
+            const pingInterval = setInterval(() => {
+
+                if (!conn.isAlive) {
+
+                    conn.terminate();
+
+                    return;
+                }
+
+                conn.isAlive = false;
+
+                conn.ping();
+
+            }, PING_TIMEOUT);
 
 
+            /*
+            * Close
+            */
             conn.on(
                 "close",
-                () => {
+                async() => {
+
+                    clearInterval(pingInterval);
 
                     session.removeCommentConnection(
                         conn
                     );
 
+                    if (session.totalConnections === 0) {
+
+                        await session.destroy();
+
+                        SessionManager.remove(
+                            documentId
+                        );
+
+                    }
+
                 }
             );
 
+            return;
+        }
+
+        if (channel === "events") {
+
+            session.addEventConnection(conn);
+
+            conn.on(
+                "close",
+                () => {
+                    session.removeEventConnection(
+                        conn
+                    );
+                }
+            );
 
             return;
+        }
 
+        if (
+            channel === "yjs" &&
+            session.isRestoring
+        ) {
+
+            conn.close(
+                1012,
+                "Document restoration in progress"
+            );
+
+            return;
         }
 
 
@@ -89,67 +202,10 @@ export function startRealtimeServer(server) {
 
             conn.clientIds = new Set();
 
-            const { doc } = session;
-
+            conn.documentGeneration = session.documentGeneration;
+            
             const messageHandler = session.messageHandler;
             messageHandler.connectionClientIds = connectionClientIds;
-
-            /*
-            |--------------------------------------------------------------------------
-            | Document Updates
-            |--------------------------------------------------------------------------
-            */
-
-            const updateListener = update => {
-
-                messageHandler.broadcastUpdate(
-
-                    update
-
-                );
-
-            };
-
-            doc.on(
-
-                "update",
-
-                updateListener
-
-            );
-
-            /*
-            |--------------------------------------------------------------------------
-            | Awareness
-            |--------------------------------------------------------------------------
-            */
-
-            const awarenessListener =
-                ({ added, updated, removed }) => {
-
-                    messageHandler.broadcastAwareness(
-
-                        [
-
-                            ...added,
-
-                            ...updated,
-
-                            ...removed
-
-                        ]
-
-                    );
-
-                };
-
-            doc.awareness.on(
-
-                "update",
-
-                awarenessListener
-
-            );
 
             /*
             |--------------------------------------------------------------------------
@@ -162,6 +218,26 @@ export function startRealtimeServer(server) {
                 "message",
 
                 data => {
+                    /*
+                    * Ignore messages from a stale
+                    * WebSocket connection.
+                    */
+                    if (
+                        conn.documentGeneration !==
+                        session.documentGeneration
+                    ) {
+
+                        return;
+                    }
+
+                    /*
+                    * Ignore messages while restoration
+                    * is actively happening.
+                    */
+
+                    if (session.restoring) {
+                        return;
+                    }
 
                     messageHandler.handle(
 
@@ -235,11 +311,16 @@ const pingInterval = setInterval(() => {
 
                     );
 
-                    if (conn.clientIds.size > 0) {
+                    /*
+                    * Remove awareness owned by
+                    * this connection.
+                    */
+
+                    if (conn.clientIds && conn.clientIds.size > 0) {
 
                         awarenessProtocol.removeAwarenessStates(
 
-                            doc.awareness,
+                            session.doc.awareness,
 
                             [...conn.clientIds],
 
@@ -249,32 +330,15 @@ const pingInterval = setInterval(() => {
 
                     }
 
-                    session.removeConnection(conn);
-
-                    doc.off(
-
-                        "update",
-
-                        updateListener
-
-                    );
-
-                    doc.awareness.off(
-
-                        "update",
-
-                        awarenessListener
-
-                    );
-
+                    
                     const ids =
-                        connectionClientIds.get(conn);
+                    connectionClientIds.get(conn);
 
                     if (ids && ids.size > 0) {
 
                         awarenessProtocol.removeAwarenessStates(
 
-                            doc.awareness,
+                            session.doc.awareness,
 
                             [...ids],
 
@@ -284,18 +348,20 @@ const pingInterval = setInterval(() => {
 
                     }
 
-                    session.removeConnection(
+                    /*
+                    * Remove connection from session.
+                    */
+                    session.removeConnection(conn);
 
-                        conn
-
-                    );
-
+                    /*
+                    * Destroy session only when
+                    * NO realtime connections remain.
+                    */
                     if (
 
-                        session.size === 0
+                        session.totalConnections === 0
 
                     ) {
-
                         await session.destroy();
 
                         SessionManager.remove(documentId);
@@ -303,9 +369,9 @@ const pingInterval = setInterval(() => {
                     }
                     } catch (err) {
 
-        console.error(err);
+                        console.error(err);
 
-    }
+                    }
 
                 }
 
