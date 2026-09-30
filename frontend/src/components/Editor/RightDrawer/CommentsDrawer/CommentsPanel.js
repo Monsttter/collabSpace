@@ -4,8 +4,8 @@ import {
     Divider,
 } from "@mui/material";
 
-import CommentThread from "./CommentThread";
-import { useDispatch, useSelector } from "react-redux";
+// import CommentThread from "./CommentThread";
+import { useDispatch } from "react-redux";
 import { X } from "lucide-react";
 import { clearPendingSelection, closeDrawer } from "../../../../store/ui/uiSlice";
 import CommentComposer from "./CommentComposer";
@@ -18,7 +18,7 @@ export default function CommentsPanel({editor}) {
 
     const { id: documentId } = useParams();
     const dispatch= useDispatch();
-    const pendingSelection= useSelector(state => state.ui.pendingSelection);
+    // const pendingSelection= useSelector(state => state.ui.pendingSelection);
     
     const handleClose= ()=>{
         dispatch(closeDrawer());
@@ -45,7 +45,8 @@ export default function CommentsPanel({editor}) {
                 sx={{
                     px: 3,
                     py: 2,
-                    borderBottom: "1px solid #E5E7EB",
+                    borderBottom: 1,
+                    borderColor: "divider",
                 }}
             >
                 <Box sx={{

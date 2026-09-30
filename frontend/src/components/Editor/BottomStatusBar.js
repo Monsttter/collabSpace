@@ -4,12 +4,18 @@ import {
     LoaderCircle,
     WifiOff,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function BottomStatusBar({
-    words = 0,
-    readingTime = 0,
+    editor,
     syncStatus = "saved", // "saved" | "saving" | "offline"
 }) {
+
+    const [documentStats, setDocumentStats] = useState({
+        words: 0,
+        readingTime: 0,
+        });
+
     const getStatus = () => {
         switch (syncStatus) {
             case "saving":
@@ -42,13 +48,73 @@ export default function BottomStatusBar({
 
     const status = getStatus();
 
+    useEffect(() => {
+      if (!editor) return;
+    
+      const handleTransaction = ({ transaction }) => {
+        if (!transaction.docChanged) return;
+
+        // Document statistics
+        const text = transaction.doc.textContent.trim();
+
+        const words = text
+            ? text.split(/\s+/).filter(Boolean).length
+            : 0;
+
+        const readingTime = words
+            ? Math.max(1, Math.ceil(words / 200))
+            : 0;
+
+        setDocumentStats({
+            words,
+            readingTime,
+        });
+      };
+    
+      editor.on("transaction", handleTransaction);
+    
+      return () => {
+        editor.off("transaction", handleTransaction);
+      };
+    }, [editor]);
+
+    useEffect(() => {
+  if (!editor) return;
+
+  const updateDocumentStats = () => {
+    const text = editor.getText().trim();
+
+    const words = text
+      ? text.split(/\s+/).filter(Boolean).length
+      : 0;
+
+    const readingTime = words
+      ? Math.max(1, Math.ceil(words / 200))
+      : 0;
+
+    setDocumentStats({
+      words,
+      readingTime,
+    });
+  };
+
+  updateDocumentStats();
+
+  editor.on("update", updateDocumentStats);
+
+  return () => {
+    editor.off("update", updateDocumentStats);
+  };
+}, [editor]);
+
     return (
         <Box
             sx={{
                 height: 42,
                 px: 3,
-                borderTop: "1px solid #ECEEF3",
-                bgcolor: "#fff",
+                borderTop: 1,
+                borderColor: "divider",
+                bgcolor: "background.paper",
 
                 display: "flex",
                 alignItems: "center",
@@ -62,10 +128,10 @@ export default function BottomStatusBar({
             <Typography
                 sx={{
                     fontSize: 13,
-                    color: "#6B7280",
+                    color: "text.secondary",
                 }}
             >
-                {words} words • {readingTime} min read
+                {documentStats.words} words • {documentStats.readingTime} min read
             </Typography>
 
             {/* Right */}

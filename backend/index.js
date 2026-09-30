@@ -5,9 +5,9 @@ import authRoutes from "./routes/authRoutes.js";
 import documentRoutes from "./routes/documentRoutes.js";
 import shareRoutes from "./routes/shareRoutes.js";
 import documentVersionRoutes from "./routes/documentVersionRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 import http from "http";
 import errorMiddleware from "./middleware/errorMiddleware.js";
-import pool from "./config/db.js";
 import commentRoutes from "./routes/commentRoutes.js";
 import { startRealtimeServer } from "./yjs/RealtimeServer.js";
 
@@ -25,6 +25,7 @@ app.use("/api/documents", documentRoutes);
 app.use("/api/documents", shareRoutes);
 app.use("/api", commentRoutes);
 app.use("/api/documents", documentVersionRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.use(errorMiddleware);
 

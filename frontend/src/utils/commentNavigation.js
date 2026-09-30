@@ -5,23 +5,23 @@ export function scrollToComment(editor, anchor, head) {
     }
 
     const from = Math.min(anchor, head);
-    const to = Math.max(anchor, head);
+    // const to = Math.max(anchor, head);
 
     const start =
         editor.view.domAtPos(from);
 
-    const end =
-        editor.view.domAtPos(to);
+    // const end =
+    //     editor.view.domAtPos(to);
 
     const startNode =
         start.node.nodeType === Node.TEXT_NODE
             ? start.node.parentElement
             : start.node;
 
-    const endNode =
-        end.node.nodeType === Node.TEXT_NODE
-            ? end.node.parentElement
-            : end.node;
+    // const endNode =
+    //     end.node.nodeType === Node.TEXT_NODE
+    //         ? end.node.parentElement
+    //         : end.node;
 
 
     /*

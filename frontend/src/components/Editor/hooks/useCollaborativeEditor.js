@@ -1,26 +1,19 @@
 import { useEditor } from "@tiptap/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import Collaboration from "@tiptap/extension-collaboration";
 import TextAlign from "@tiptap/extension-text-align";
 import {CommentHighlight} from "../extensions/CommentHighlight";
 import { RemoteCursor } from "../extensions/RemoteCursor";
 import { useCollaborationContext } from "../context/CollaborationContext";
-import { ySyncPluginKey } from "@tiptap/y-tiptap";
 import { setSelectedRange } from "../../../store/comments/commentsSlice";
 
-import * as Y from "yjs";
 import { useDispatch, useSelector } from "react-redux";
-import { selectComments } from "../../../store/comments/commentsSelectors";
-import { resolveCommentPositions } from "../../../utils/commentPositions";
+// import { selectComments } from "../../../store/comments/commentsSelectors";
+import Link from "@tiptap/extension-link";
+import Image from "@tiptap/extension-image";
 
 export default function useCollaborativeEditor() {
-
-    const comments= useSelector(selectComments);
-
-    const document = useSelector(
-        state => state.documents.currentDocument
-    );
 
     const user= useSelector(state => state.auth.user);
     
@@ -75,6 +68,17 @@ export default function useCollaborativeEditor() {
                               "paragraph",
                           ],
                       }),
+
+                      Link.configure({
+                            // openOnClick: false,
+                            autolink: true,
+                            linkOnPaste: true,
+                        }),
+
+                        Image.configure({
+                            inline: false,
+                            allowBase64: false,
+                        }),
                   ],
 
                   editorProps: {
@@ -190,7 +194,7 @@ export default function useCollaborativeEditor() {
         );
 
     };
-
+    // eslint-disable-next-line
 }, [editor, provider]);
 
     return editor;

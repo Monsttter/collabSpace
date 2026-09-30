@@ -28,6 +28,7 @@ export default function AuthInitializer({ children }) {
     }
 
     init();
+    // eslint-disable-next-line
   }, []);
 
   return children;

@@ -8,12 +8,13 @@ import {
   TextField,
   CircularProgress,
 } from "@mui/material";
-import { MoreVertical, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import { renameDocument } from "../../store/documents/documentSlice";
-import { updateDocumentTitle } from "../../api/documents";
+import { renameDocument, toggleFavorite } from "../../store/documents/documentSlice";
+import { toggleDocumentFavorite, updateDocumentTitle } from "../../api/documents";
+// import { StarBorder, StarBorderRounded } from "@mui/icons-material";
 
 export default function EditorHeader({ openShareDialog }) {
   const navigate = useNavigate();
@@ -65,6 +66,11 @@ export default function EditorHeader({ openShareDialog }) {
     }
   };
 
+  const handleToggleFavorite= async()=>{
+    await toggleDocumentFavorite(id);
+    dispatch(toggleFavorite(id));
+  }
+
   return (
     <Box
       sx={{
@@ -73,8 +79,9 @@ export default function EditorHeader({ openShareDialog }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        bgcolor: "#fff",
-        borderBottom: "1px solid #ECEEF3",
+        bgcolor: "background.paper",
+        borderBottom: 1,
+        borderColor: "divider",
       }}
     >
       <Box
@@ -90,11 +97,11 @@ export default function EditorHeader({ openShareDialog }) {
             color="inherit"
             sx={{
               cursor: "pointer",
-              color: "#64748B",
+              color: "text.secondary",
               fontWeight: 500,
               fontSize: 15,
             }}
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/documents")}
           >
             Documents
           </Link>
@@ -119,7 +126,7 @@ export default function EditorHeader({ openShareDialog }) {
               onClick={() => setEditingTitle(true)}
               sx={{
                 fontWeight: 700,
-                color: "#111827",
+                color: "text.primary",
                 fontSize: 16,
                 cursor: "pointer",
               }}
@@ -129,8 +136,21 @@ export default function EditorHeader({ openShareDialog }) {
           )}
           {loading && <CircularProgress size={14} />}
         </Breadcrumbs>
-        <IconButton>
-          <Star size={19} />
+        <IconButton onClick={handleToggleFavorite}>
+          {
+            document?.favorite ? (
+                <Star
+                  size={20}
+                  fill="#FACC15"
+                  color="#FACC15"
+                />
+              )
+              : <Star
+                  size={20}
+                  fill="white"
+                  color="grey"
+                />
+          }
         </IconButton>
       </Box>
 
@@ -156,9 +176,9 @@ export default function EditorHeader({ openShareDialog }) {
           Share
         </Button>
 
-        <IconButton>
+        {/* <IconButton>
           <MoreVertical size={20} />
-        </IconButton>
+        </IconButton> */}
       </Box>
     </Box>
   );

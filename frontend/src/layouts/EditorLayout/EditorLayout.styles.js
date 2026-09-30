@@ -5,7 +5,8 @@ import Box from "@mui/material/Box";
 
 export const LayoutRoot = styled(Box)(({ theme }) => ({
     display: "flex",
-    minHeight: "100vh",
+    height: "100vh",
+    overflow: "hidden",
     backgroundColor: theme.palette.background.default,
 }));
 
@@ -13,7 +14,7 @@ export const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,
     display: "flex",
     flexDirection: "column",
-    minHeight: "100vh",
+    minHeight: "100vh"
 }));
 
 export const Content = styled(Box)(({ theme }) => ({

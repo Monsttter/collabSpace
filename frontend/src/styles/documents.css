@@ -1,0 +1,336 @@
+.documents-page {
+    min-height: 100%;
+    /* padding: 42px 48px 60px; */
+    /* background: #f7f8fc; */
+    box-sizing: border-box;
+}
+
+
+/* ---------------- Header ---------------- */
+
+.documents-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 30px;
+}
+
+.documents-title {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+}
+
+.documents-subtitle {
+    margin-top: 5px !important;
+
+    font-size: 15px !important;
+    /* color: #68748a; */
+}
+
+
+/* ---------------- Toolbar ---------------- */
+
+.documents-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.documents-search {
+    width: 460px;
+}
+
+.documents-search .MuiOutlinedInput-root {
+    /* background: #ffffff; */
+    border-radius: 9px;
+}
+
+.documents-search .MuiOutlinedInput-input {
+    font-size: 14px;
+}
+
+.search-icon {
+    margin-right: 8px;
+    color: #9aa3b2;
+}
+
+
+.documents-sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    color: #6b7280;
+}
+
+.documents-sort > svg {
+    font-size: 20px;
+}
+
+.sort-label {
+    font-size: 14px !important;
+}
+
+.documents-sort .MuiSelect-select {
+    padding: 4px 28px 4px 4px !important;
+
+    font-size: 14px;
+    color: #374151;
+}
+
+
+/* ---------------- Filters ---------------- */
+
+.documents-filters {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-bottom: 30px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.document-filter {
+    padding: 10px 14px;
+
+    border: none;
+    border-bottom: 2px solid transparent;
+
+    background: transparent;
+
+    color: #68748a;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.document-filter:hover {
+    color: #4f46e5;
+}
+
+.document-filter.active {
+    color: #4f46e5;
+    border-bottom-color: #4f46e5;
+}
+
+
+/* ---------------- Section ---------------- */
+
+.documents-section {
+    width: 100%;
+}
+
+.documents-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+}
+
+.section-title {
+    font-size: 18px !important;
+    font-weight: 650 !important;
+    /* color: #172033; */
+}
+
+.document-count {
+    font-size: 13px !important;
+    /* color: #8a94a6; */
+}
+
+
+/* ---------------- Document list ---------------- */
+
+.documents-list {
+    border-radius: 12px;
+
+    overflow: hidden;
+}
+
+
+.document-list-item {
+    min-height: 76px;
+    padding: 12px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    /* border-bottom: 1px solid #f0f1f4; */
+
+    cursor: pointer;
+
+    transition: background 0.12s ease;
+}
+
+.document-list-item:last-child {
+    border-bottom: none;
+}
+
+
+.document-list-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    min-width: 0;
+}
+
+
+.document-list-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #f0f2ff;
+    border-radius: 12px;
+
+    color: #5550e8;
+}
+
+.document-list-icon svg {
+    font-size: 21px;
+}
+
+
+.document-list-info {
+    min-width: 0;
+}
+
+
+.document-list-title {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    /* color: #263044; */
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.document-list-time {
+    margin-top: 4px !important;
+
+    font-size: 13px !important;
+    /* color: #64748B; */
+}
+
+
+.document-list-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    margin-left: 20px;
+}
+
+.document-list-actions .MuiIconButton-root {
+    color: #9aa3b2;
+}
+
+.document-list-actions .MuiIconButton-root:hover {
+    background: #f3f4f8;
+}
+
+.favorite-active {
+    color: #f5b700 !important;
+}
+
+
+/* ---------------- Empty / Error ---------------- */
+
+.documents-empty,
+.documents-state {
+    min-height: 260px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* background: #ffffff; */
+
+    /* border: 1px solid #e5e7eb; */
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.documents-empty > svg {
+    margin-bottom: 12px;
+
+    font-size: 42px;
+    color: #b5bbca;
+}
+
+.empty-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    /* color: #374151; */
+}
+
+.empty-description {
+    max-width: 350px;
+
+    margin-top: 6px !important;
+
+    font-size: 13px !important;
+    /* color: #929caf; */
+}
+
+.documents-state {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.documents-state.error {
+    color: #d14343;
+}
+
+
+/* ---------------- Responsive ---------------- */
+
+@media (max-width: 900px) {
+
+    .documents-page {
+        padding: 32px 28px 48px;
+    }
+
+    .documents-search {
+        width: 350px;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .documents-page {
+        padding: 26px 18px 40px;
+    }
+
+    .documents-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .documents-search {
+        width: 100%;
+    }
+
+    .documents-sort {
+        justify-content: flex-end;
+    }
+}

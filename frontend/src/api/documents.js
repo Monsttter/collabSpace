@@ -23,3 +23,11 @@ export const updateDocumentTitle = async (docId, title) => {
   });
 };
 
+export const toggleDocumentFavorite = async (docId) => {
+  return api(`/documents/${docId}/favorite`, { method: "PATCH" });
+};
+
+export const removeDocument = async (docId) => {
+  return api(`/documents/${docId}`, { method: "DELETE" });
+};
+

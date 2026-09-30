@@ -21,12 +21,12 @@ export default function ToolbarButton({
                         height: 34,
                         borderRadius: 2,
 
-                        bgcolor: active ? "#EEF2FF" : "transparent",
+                        bgcolor: active ? "action.selected" : "transparent",
 
                         color: active ? "#4F46E5" : "#4B5563",
 
                         "&:hover": {
-                            bgcolor: "#EEF2FF",
+                            bgcolor: "action.hover",
                         },
                     }}
                 >

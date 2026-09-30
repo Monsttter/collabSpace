@@ -13,7 +13,6 @@ import {
     renameDocumentSchema,
 
 } from "../validators/documentValidator.js";
-import pool from "../config/db.js";
 
 const router = express.Router();
 
@@ -112,17 +111,6 @@ export default router;
 
 //   res.json(doc.rows[0]);
 // });
-
-router.put("/:id", authenticate, async (req, res) => {
-  const { content } = req.body;
-  
-  await pool.query(
-    "UPDATE documents SET content=$1 WHERE id=$2",
-    [content, req.params.id]
-  );
-
-  res.send("Updated");
-});
 
 // router.post("/share", fetchUser, async (req, res) => {
 //   const { document_id, email } = req.body;

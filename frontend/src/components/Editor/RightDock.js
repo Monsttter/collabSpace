@@ -49,8 +49,9 @@ export default function RightDock() {
         <Box
             sx={{
                 width: 72,
-                bgcolor: "white",
-                borderLeft: "1px solid #E5E7EB",
+                bgcolor: "background.paper",
+                borderLeft: 1,
+                borderColor: "divider",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

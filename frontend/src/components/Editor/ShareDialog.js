@@ -1,4 +1,4 @@
-import { Close, CloseOutlined, ContentCopy } from "@mui/icons-material";
+import {  CloseOutlined } from "@mui/icons-material";
 import {
     Dialog,
     DialogTitle,
@@ -9,14 +9,14 @@ import {
     Select,
     MenuItem,
     Typography,
-    Divider,
+    // Divider,
     Box,
-    IconButton,
-    Stack,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    InputAdornment
+    // IconButton,
+    // Stack,
+    // RadioGroup,
+    // FormControlLabel,
+    // Radio,
+    // InputAdornment
 } from "@mui/material";
 
 import { useState } from "react";
@@ -36,24 +36,24 @@ export default function ShareDialog({
 
     const [permission, setPermission] = useState("editor");
 
-    const [generalAccess, setGeneralAccess] = useState("Private");
+    // const [generalAccess, setGeneralAccess] = useState("Private");
 
-    const [linkPermission, setLinkPermission] = useState("viewer");
+    // const [linkPermission, setLinkPermission] = useState("viewer");
 
     const [email, setEmail]= useState("");
 
     const dispatch= useDispatch();
 
-    const shareLink =
-        "https://collabspace.app/doc/3Hdj82Ksk";
+    // const shareLink =
+    //     "https://collabspace.app/doc/3Hdj82Ksk";
 
-    const handleCopy = async () => {
+    // const handleCopy = async () => {
 
-        await navigator.clipboard.writeText(
-                shareLink
-            );
+    //     await navigator.clipboard.writeText(
+    //             shareLink
+    //         );
 
-    };
+    // };
     
     const handleShare = async () => {
         dispatch(shareDocument({documentId: id, email, role: permission}));
@@ -161,19 +161,19 @@ export default function ShareDialog({
 
                 </Button>
 
-                <Divider
+                {/* <Divider
                     sx={{ my: 3 }}
-                />
+                /> */}
 
-                <Typography
+                {/* <Typography
                     fontWeight={600}
                 >
 
                 General Access
 
-                </Typography>
+                </Typography> */}
 
-                <RadioGroup
+                {/* <RadioGroup
 
                     value={generalAccess}
 
@@ -203,9 +203,9 @@ export default function ShareDialog({
 
                 />
 
-                </RadioGroup>
+                </RadioGroup> */}
 
-                <Select
+                {/* <Select
 
                     value={linkPermission}
 
@@ -231,10 +231,10 @@ export default function ShareDialog({
 
                 </MenuItem>
 
-                </Select>
+                </Select> */}
 
-                <Divider sx={{ my: 2 }} />
-
+                {/* <Divider sx={{ my: 2 }} /> */}
+{/* 
                 <Typography
                     fontWeight={600}
                     mb={2}
@@ -242,9 +242,9 @@ export default function ShareDialog({
 
                 Share Link
 
-                </Typography>
+                </Typography> */}
 
-                <TextField
+                {/* <TextField
 
                     fullWidth
 
@@ -273,7 +273,7 @@ export default function ShareDialog({
 
                     }}
 
-                />
+                /> */}
 
             </DialogContent>
 

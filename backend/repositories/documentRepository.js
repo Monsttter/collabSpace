@@ -199,7 +199,9 @@ export async function updateTitle(documentId,title){
 /**
  * Soft delete.
  */
-// export async function deleteDocument(documentId){
+export async function deleteDocument(documentId) {
+    await pool.query("DELETE FROM documents WHERE id = $1", [documentId]);
+}
 
 //     await pool.query(
 
@@ -245,7 +247,15 @@ export async function updateTitle(documentId,title){
 /**
  * Favorite.
  */
-// export async function toggleFavorite(documentId,userId){
+export async function toggleFavorite(documentId, userId) {
+    const { rows } = await pool.query(
+        `UPDATE document_members SET favorite = NOT favorite
+         WHERE document_id = $1 AND user_id = $2
+         RETURNING favorite`,
+        [documentId, userId]
+    );
+    return rows[0];
+}
 
 //     const { rows } = await pool.query(
 

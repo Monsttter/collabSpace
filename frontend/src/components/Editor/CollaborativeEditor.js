@@ -1,7 +1,5 @@
-import { Box, InputBase, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { EditorContent as TiptapEditorContent } from "@tiptap/react";
-import { useState, useEffect } from "react";
-import EditorToolbar from "./EditorToolbar";
 
 export default function CollaborativeEditor({
     editor
@@ -13,15 +11,19 @@ export default function CollaborativeEditor({
                 flex: 1,
                 overflowY: "auto",
                 scrollbarWidth: "none",
-                bgcolor: "#F8FAFC",
+                bgcolor: "background.default",
                 px: { xs: 3, md: 8 },
                 py: 5,
             }}
         >
             <Box
                 sx={{
+                    bgcolor: "background.paper",
                     maxWidth: 900,
                     mx: "auto",
+                    p: 2,
+                    borderRadius: "10px",
+                    color: "text.primary"
                 }}
             >
                 <TiptapEditorContent editor={editor} />

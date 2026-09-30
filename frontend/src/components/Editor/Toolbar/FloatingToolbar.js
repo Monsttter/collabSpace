@@ -34,6 +34,74 @@ export default function FloatingToolbar({
 
     if (!editor) return null;
 
+    const handleAddLink = () => {
+  if (!editor) return;
+
+  const { empty } = editor.state.selection;
+
+  if (empty) {
+    return;
+  }
+
+  const previousUrl = editor.getAttributes("link").href || "";
+
+  const url = window.prompt(
+    "Enter URL",
+    previousUrl
+  );
+
+  if (url === null) {
+    return;
+  }
+
+  const trimmedUrl = url.trim();
+
+  if (!trimmedUrl) {
+    editor
+      .chain()
+      .focus()
+      .unsetLink()
+      .run();
+
+    return;
+  }
+
+  editor
+    .chain()
+    .focus()
+    .setLink({
+      href: trimmedUrl,
+    })
+    .run();
+};
+
+const handleAddImage = () => {
+  if (!editor) return;
+
+  const url = window.prompt("Enter image URL");
+
+  if (url === null) {
+    return;
+  }
+
+  const trimmedUrl = url.trim();
+
+  if (!trimmedUrl) {
+    return;
+  }
+
+  const alt = window.prompt("Enter image description (optional)") || "";
+
+  editor
+    .chain()
+    .focus()
+    .setImage({
+      src: trimmedUrl,
+      alt: alt.trim(),
+    })
+    .run();
+};
+
     return (
         <Box
             sx={{
@@ -48,17 +116,18 @@ export default function FloatingToolbar({
                 maxWidth: "100%",
 
                 mx: "auto",
-                mb: 4,
+                mb: 1,
 
                 px: 2,
                 py: 0.8,
 
                 borderRadius: "999px",
 
-                background: "rgba(255,255,255,.90)",
+                background: (theme) => theme.palette.mode === "dark" ? "rgba(18,26,46,.92)" : "rgba(255,255,255,.90)",
                 backdropFilter: "blur(16px)",
 
-                border: "1px solid #E5E7EB",
+                border: "1px solid",
+                borderColor: "divider",
 
                 boxShadow:
                     "0 10px 35px rgba(15,23,42,.08)",
@@ -223,7 +292,8 @@ export default function FloatingToolbar({
                 title="Link"
                 icon={Link}
                 active={editor.isActive("link")}
-                onClick={() => {}}
+                disabled={!editor || editor.state.selection.empty}
+                onClick={handleAddLink}
             />
 
             {/* Hidden when drawer opens */}
@@ -278,7 +348,7 @@ export default function FloatingToolbar({
                     <ToolbarButton
                         title="Image"
                         icon={Image}
-                        onClick={() => {}}
+                        onClick={handleAddImage}
                     />
                 </>
             )}

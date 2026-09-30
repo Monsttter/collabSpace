@@ -6,20 +6,15 @@ import {
     Content,
 } from "./DashboardLayout.styles";
 
-import Sidebar from "../../components/layout/Sidebar";
-import Navbar from "../../components/layout/Navbar";
-import EditorSidebar from "../../components/EditorSidebar/EditorSidebar";
-import EditorLayout from "../../components/Editor/EditorLayout";
-// import EditorLayout from "../../components/EditorSidebar/EditorLayout";
+import Navbar from "../../components/Navbar";
+import EditorSidebar from "../../components/Sidebar/EditorSidebar.js";
+import { Outlet } from "react-router";
 
 const DashboardLayout = ({ children }) => {
     return (
         <LayoutRoot>
 
-            {/* <Sidebar /> */}
             <EditorSidebar />
-            {/* <EditorLayout /> */}
-
 
             <Main>
 
@@ -27,7 +22,7 @@ const DashboardLayout = ({ children }) => {
 
                 <Content>
 
-                    {children}
+                    <Outlet/>
 
                 </Content>
 

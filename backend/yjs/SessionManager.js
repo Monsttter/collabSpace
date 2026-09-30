@@ -17,7 +17,6 @@ class SessionManager {
     getOrCreate(documentId) {
 
     let session = this.sessions.get(documentId);
-    console.log(documentId);
 
     if (session) {
 
@@ -35,13 +34,13 @@ class SessionManager {
 
     );
 
-    console.log(
+    // console.log(
 
-        "Created session:",
+    //     "Created session:",
 
-        documentId
+    //     documentId
 
-    );
+    // );
 
     session.initialize();
 
@@ -53,10 +52,10 @@ class SessionManager {
 
         this.sessions.delete(documentId);
 
-        console.log(
-            "Destroyed session:",
-            documentId
-        );
+        // console.log(
+        //     "Destroyed session:",
+        //     documentId
+        // );
 
     }
 

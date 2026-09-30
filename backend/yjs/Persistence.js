@@ -23,9 +23,9 @@ class Persistence {
             return;
         }
 
-        console.log(
-            `Loading snapshot (${snapshot.length} bytes)`
-        );
+        // console.log(
+        //     `Loading snapshot (${snapshot.length} bytes)`
+        // );
 
         Y.applyUpdate(
 
@@ -35,15 +35,15 @@ class Persistence {
 
         );
 
-        console.log(
+        // console.log(
 
-            "Loaded:",
+        //     "Loaded:",
 
-            doc
-                .getXmlFragment("default")
-                .toJSON()
+        //     doc
+        //         .getXmlFragment("default")
+        //         .toJSON()
 
-        );
+        // );
 
     }
 
@@ -54,24 +54,20 @@ class Persistence {
     */
 
     async save(documentId, doc) {
-
         const snapshot =
             Y.encodeStateAsUpdate(doc);
 
-        console.log(
+        // console.log(
+        //     `Saving snapshot (${snapshot.length} bytes)`
+        // );
 
-            `Saving snapshot (${snapshot.length} bytes)`
+        const updatedAt =
+            await repository.saveSnapshot(
+                documentId,
+                snapshot
+            );
 
-        );
-
-        await repository.saveSnapshot(
-
-            documentId,
-
-            snapshot
-
-        );
-
+        return updatedAt;
     }
 
 }

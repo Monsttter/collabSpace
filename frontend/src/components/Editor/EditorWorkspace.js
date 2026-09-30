@@ -1,11 +1,10 @@
 import { Box } from "@mui/material";
 
-// import FloatingToolbar from "./FloatingToolbar";
-import EditorToolbar from "./EditorToolbar";
 import FloatingToolbar from "./Toolbar/FloatingToolbar";
 import CollaborativeEditor from "./CollaborativeEditor";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
+import BottomStatusBar from "./BottomStatusBar";
 
 export default function EditorWorkspace({editor}) {
     
@@ -24,23 +23,31 @@ export default function EditorWorkspace({editor}) {
     <Box
       sx={{
         flex: 1,
-        overflow: "auto",
-        px: 5,
-        py: 4,
+        display: "flex",
+        flexDirection: "column",
         transition: ".25s",
-        scrollbarWidth: "none",
+        overflow: "hidden"
       }}
     >
       <Box
         sx={{
-          maxWidth: drawer ? 900 : 1050,
-          mx: "auto",
+          maxWidth: drawer && 900,
+          py: 3,
+          overflow: "auto",
+          scrollbarWidth: "none",
         }}
       >
 
         <FloatingToolbar editor={editor} />
 
         <CollaborativeEditor key={docId} editor={editor} />
+      </Box>
+      <Box 
+        sx={{
+          flexShrink: 0,
+        }}>
+        <BottomStatusBar editor={editor} />
+
       </Box>
     </Box>
   );

@@ -22,7 +22,7 @@ export default function DocumentInitializer({ children }) {
 
         if (id)
             loadDocument();
-
+        // eslint-disable-next-line
     }, [id]);
 
     return children;

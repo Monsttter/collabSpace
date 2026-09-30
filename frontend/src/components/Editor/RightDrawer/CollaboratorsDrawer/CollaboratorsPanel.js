@@ -1,31 +1,24 @@
 import React, { useMemo, useState } from "react";
 import {
   Box,
-  Drawer,
   Typography,
   IconButton,
   TextField,
   InputAdornment,
-  Avatar,
-  Chip,
   Divider,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  ListItemText,
   Button,
   Paper,
 } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+// import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
+// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+// import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { clearPendingSelection, closeDrawer } from "../../../../store/ui/uiSlice";
-import { useParams } from "react-router";
+// import { useParams } from "react-router";
 import { useCollaborationContext } from "../../context/CollaborationContext";
 import MemberCard from "./MemberCard";
 
@@ -40,7 +33,7 @@ export default function CollaboratorsPanel({
 }) {
   const [search, setSearch] = useState("");
 
-  const {id: documentId}= useParams();
+  // const {id: documentId}= useParams();
 
     const dispatch= useDispatch();
 
@@ -57,9 +50,7 @@ export default function CollaboratorsPanel({
     const isOwner= document.role === "owner";
 
     const {
-        collaborators,
-        loading,
-        error,
+        collaborators
     } = useSelector(
         (state) => state.collaborators
     );

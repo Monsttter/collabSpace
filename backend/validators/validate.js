@@ -14,7 +14,7 @@ export default function validate(schema) {
 
                     400,
 
-                    result.error.errors[0].message
+                    result.error[0].message
 
                 )
 

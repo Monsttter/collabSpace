@@ -69,7 +69,7 @@ export default class Session {
   }
 
   async #initialize() {
-    console.log(`Loading ${this.documentId}`);
+    // console.log(`Loading ${this.documentId}`);
 
     await Persistence.load(
       this.documentId,
@@ -131,7 +131,7 @@ export default class Session {
 
     this.listenersAttached = true;
 
-    console.log(`Attached Yjs listeners for ${this.documentId}`);
+    // console.log(`Attached Yjs listeners for ${this.documentId}`);
   }
 
   /*
@@ -164,7 +164,7 @@ export default class Session {
 
     this.listenersAttached = false;
 
-    console.log(`Detached Yjs listeners for ${this.documentId}`);
+    // console.log(`Detached Yjs listeners for ${this.documentId}`);
   }
 
   /*
@@ -240,19 +240,24 @@ export default class Session {
     */
 
   async save() {
-    if (!this.dirty) {
-      return;
-    }
+      if (!this.dirty) {
+          return;
+      }
 
-    console.log(`Saving ${this.documentId}`);
+      // console.log(`Saving ${this.documentId}`);
 
-    await Persistence.save(
-      this.documentId,
+      const updatedAt = await Persistence.save(
+          this.documentId,
+          this.doc,
+      );
 
-      this.doc,
-    );
+      this.dirty = false;
 
-    this.dirty = false;
+      this.broadcastEvent({
+          type: "document-updated",
+          documentId: this.documentId,
+          updatedAt,
+      });
   }
 
   /*
@@ -312,7 +317,7 @@ export default class Session {
 
     this.eventConnections.clear();
 
-    console.log(`Session destroyed: ${this.documentId}`);
+    // console.log(`Session destroyed: ${this.documentId}`);
   }
 
   /*
@@ -419,7 +424,7 @@ export default class Session {
    */
 
   async replaceDocument(snapshot) {
-    console.log(`Replacing Y.Doc for ${this.documentId}`);
+    // console.log(`Replacing Y.Doc for ${this.documentId}`);
 
     if (!snapshot) {
       throw new Error("Version snapshot is missing");
@@ -478,7 +483,7 @@ export default class Session {
      */
     this.dirty = true;
 
-    console.log(`Y.Doc replaced successfully for ${this.documentId}`);
+    // console.log(`Y.Doc replaced successfully for ${this.documentId}`);
   }
 
 closeYjsConnections(

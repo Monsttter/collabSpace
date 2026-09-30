@@ -3,10 +3,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Typography,
-  Avatar,
+  // Avatar,
   Button,
   IconButton,
-  Chip,
+  // Chip,
   Divider,
   CircularProgress,
   DialogActions,
@@ -247,7 +247,7 @@ export default function VersionHistory() {
 
         flexDirection: "column",
 
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "background.paper",
       }}
     >
       {/* ========================================================== */}
@@ -289,7 +289,7 @@ export default function VersionHistory() {
               sx={{
                 fontSize: 25,
 
-                color: "#4B35C5",
+                color: "primary.main",
               }}
             />
 
@@ -299,7 +299,7 @@ export default function VersionHistory() {
 
                 fontWeight: 600,
 
-                color: "#111111",
+                color: "text.primary",
               }}
             >
               Version history
@@ -312,13 +312,13 @@ export default function VersionHistory() {
             onClick={handleClose}
             size="small"
             sx={{
-              color: "#666666",
+              color: "text.secondary",
 
               width: 36,
               height: 36,
 
               "&:hover": {
-                backgroundColor: "#F4F4F5",
+                backgroundColor: "action.hover",
               },
             }}
           >
@@ -365,14 +365,14 @@ export default function VersionHistory() {
 
               fontWeight: 600,
 
-              color: "#4935C6",
+              color: "primary.main",
 
-              borderColor: "#9B8DFF",
+              borderColor: "primary.light",
 
               "&:hover": {
-                borderColor: "#6F5BEB",
+                borderColor: "primary.main",
 
-                backgroundColor: "#F8F6FF",
+                backgroundColor: "action.hover",
               },
             }}
           >
@@ -408,7 +408,7 @@ export default function VersionHistory() {
           },
 
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#CFCFCF",
+            backgroundColor: "divider",
 
             borderRadius: 10,
           },
@@ -433,7 +433,7 @@ export default function VersionHistory() {
             <CircularProgress
               size={26}
               sx={{
-                color: "#5842D5",
+                color: "primary.main",
               }}
             />
           </Box>
@@ -451,7 +451,7 @@ export default function VersionHistory() {
               sx={{
                 fontSize: 42,
 
-                color: "#C7C7C7",
+                color: "text.secondary",
 
                 mb: 1,
               }}
@@ -460,7 +460,7 @@ export default function VersionHistory() {
             <Typography
               fontWeight={600}
               sx={{
-                color: "#444",
+                color: "text.primary",
               }}
             >
               No versions yet
@@ -494,7 +494,7 @@ export default function VersionHistory() {
 
                   fontWeight: 600,
 
-                  color: "#666666",
+                  color: "text.secondary",
 
                   mb: 1,
                 }}
@@ -529,7 +529,8 @@ export default function VersionHistory() {
 
           py: 1.5,
 
-          borderTop: "1px solid #EEEEEE",
+          borderTop: 1,
+          borderColor: "divider",
 
           display: "flex",
 
@@ -542,7 +543,7 @@ export default function VersionHistory() {
           sx={{
             fontSize: 17,
 
-            color: "#777777",
+            color: "text.secondary",
           }}
         />
 
@@ -550,7 +551,7 @@ export default function VersionHistory() {
           sx={{
             fontSize: 12.5,
 
-            color: "#777777",
+            color: "text.secondary",
           }}
         >
           Only document owners and editors can create new versions.

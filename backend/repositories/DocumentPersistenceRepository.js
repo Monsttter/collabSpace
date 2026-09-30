@@ -25,26 +25,23 @@ class DocumentPersistenceRepository {
 }
 
     async saveSnapshot(documentId, snapshot) {
+        const { rows } = await pool.query(
+            `
+            UPDATE documents
+            SET
+                snapshot = $1,
+                updated_at = NOW()
+            WHERE id = $2
+            RETURNING updated_at
+            `,
+            [
+                Buffer.from(snapshot),
+                documentId
+            ]
+        );
 
-    await pool.query(
-
-        `
-        UPDATE documents
-        SET snapshot = $1
-        WHERE id = $2
-        `,
-
-        [
-
-            Buffer.from(snapshot),
-
-            documentId
-
-        ]
-
-    );
-
-}
+        return rows[0]?.updated_at;
+    }
 
 }
 

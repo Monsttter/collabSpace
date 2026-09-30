@@ -4,7 +4,7 @@ import {
   fetchComments,
   createComment,
   createReply,
-  resolveComment,
+  // resolveComment,
   fetchReplies,
   deleteReply,
   deleteComment,

@@ -1,17 +1,7 @@
 import { Box } from "@mui/material";
 import EditorHeader from "./EditorHeader";
 import StatusBar from "./StatusBar";
-import EditorToolbar from "./EditorToolbar";
-import EditorContent from "./CollaborativeEditor";
-import BottomStatusBar from "./BottomStatusBar";
-
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import TextAlign from "@tiptap/extension-text-align";
 import { useEffect, useState } from "react";
-
-import "../../styles/editor.css"
-import { updateDocument } from "../../api/documents";
 import RightDock from "./RightDock";
 import EditorWorkspace from "./EditorWorkspace";
 import DrawerPanel from "./RightDrawer/DrawerPanel";
@@ -23,12 +13,13 @@ import useCollaborativeEditor from "./hooks/useCollaborativeEditor";
 import { fetchCollaborators } from "../../store/collaborators/collaboratorsThunks";
 import AccessRevokedScreen from "./AccessRevokedScreen";
 
+import "../../styles/editor.css"
+
 export default function EditorLayout() {
 
     const {id: documentId}= useParams();
     const drawer= useSelector(state => state.ui.drawer);
     const [shareOpen, setShareOpen] = useState(false);
-    const document = useSelector(state => state.documents.currentDocument);
 
     const dispatch = useDispatch();
 
@@ -100,8 +91,6 @@ export default function EditorLayout() {
                     <RightDock
                     />
                 </Box>
-
-                <BottomStatusBar />
                 
                 <ShareDialog
 

@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 
 import CommentsPanel from "./CommentsDrawer/CommentsPanel";
 import CollaboratorsPanel from "./CollaboratorsDrawer/CollaboratorsPanel";
-import HistoryPanel from "./HistoryDrawer/HistoryPanel";
 import AIPanel from "./AIDrawer/AIPanel";
 import { useSelector } from "react-redux";
 import VersionHistory from "./HistoryDrawer/VersionHistory";
@@ -15,17 +14,17 @@ export default function DrawerPanel({ editor, openShareDialog }) {
     const panels = {
         comments: <CommentsPanel editor={editor}/>,
         collaborators: <CollaboratorsPanel openShareDialog={openShareDialog} />,
-        // history: <HistoryPanel/>,
         history: <VersionHistory/>,
-        ai: <AIPanel/>,
+        ai: <AIPanel editor={editor}/>,
     };
 
     return (
         <Box
             sx={{
-                width: 360,
-                bgcolor: "#fff",
-                borderLeft: "1px solid #E5E7EB",
+                width: { xs: "100%", sm: 380 },
+                bgcolor: "background.paper",
+                borderLeft: 1,
+                borderColor: "divider",
                 display: "flex",
                 flexDirection: "column",
                 overflow: "hidden",

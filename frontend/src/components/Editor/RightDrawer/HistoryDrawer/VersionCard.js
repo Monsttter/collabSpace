@@ -1,34 +1,28 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 
 import {
     Box,
     Typography,
-    Avatar,
+    // Avatar,
     Button,
     IconButton,
-    Chip,
-    Divider,
-    CircularProgress,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Dialog,
+    Chip
 } from "@mui/material"
 
 
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-function getInitials(name, email) {
-  const value = name || email || "?";
+// function getInitials(name, email) {
+//   const value = name || email || "?";
 
-  return value
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((word) => word[0]?.toUpperCase())
-    .join("");
-}
+//   return value
+//     .trim()
+//     .split(/\s+/)
+//     .slice(0, 2)
+//     .map((word) => word[0]?.toUpperCase())
+//     .join("");
+// }
 
 function formatTime(date) {
   if (!date) {
@@ -47,11 +41,11 @@ function formatTime(date) {
 |--------------------------------------------------------------------------
 */
 
-const avatarColors = ["#E7E0FF", "#FFE0E5", "#FFF0B8", "#DDEBFF", "#DDF5E7"];
+// const avatarColors = ["#E7E0FF", "#FFE0E5", "#FFF0B8", "#DDEBFF", "#DDF5E7"];
 
-function getAvatarColor(index) {
-  return avatarColors[index % avatarColors.length];
-}
+// function getAvatarColor(index) {
+//   return avatarColors[index % avatarColors.length];
+// }
 
 export default function VersionCard({
     version,
@@ -90,14 +84,14 @@ export default function VersionCard({
 
                 borderColor:
                     isCurrent
-                        ? "#B9ADFF"
+                        ? "primary.light"
                         : "divider",
 
                 borderRadius: 1,
 
                 backgroundColor:
                     isCurrent
-                        ? "#FCFAFF"
+                        ? "action.selected"
                         : "background.paper",
 
                 transition:
@@ -106,8 +100,8 @@ export default function VersionCard({
                 "&:hover": {
                     borderColor:
                         isCurrent
-                            ? "#A99AFF"
-                            : "#C9C9C9",
+                            ? "primary.main"
+                            : "text.secondary",
 
                     boxShadow:
                         "0 2px 8px rgba(0,0,0,0.05)",
@@ -167,7 +161,7 @@ export default function VersionCard({
 
                         lineHeight: 1.35,
 
-                        color: "#171717",
+                        color: "text.primary",
 
                         overflow: "hidden",
 
@@ -230,9 +224,9 @@ export default function VersionCard({
                             fontWeight: 500,
 
                             backgroundColor:
-                                "#F1F1F3",
+                                "action.hover",
 
-                            color: "#4A4A4A",
+                            color: "text.secondary",
 
                             "& .MuiChip-label": {
                                 px: 1,
@@ -254,9 +248,9 @@ export default function VersionCard({
                                 fontWeight: 600,
 
                                 backgroundColor:
-                                    "#EEE9FF",
+                                    "action.selected",
 
-                                color: "#4B35C5",
+                                color: "primary.main",
 
                                 "& .MuiChip-label": {
                                     px: 1,
@@ -371,7 +365,7 @@ export default function VersionCard({
 
                         fontWeight: 600,
 
-                        color: "#4935C6",
+                        color: "primary.main",
 
                         borderColor:
                             isCurrent
@@ -380,10 +374,10 @@ export default function VersionCard({
 
                         "&:hover": {
                             borderColor:
-                                "#8F7FFF",
+                                "primary.main",
 
                             backgroundColor:
-                                "#F8F6FF",
+                                "action.hover",
                         },
                     }}
                 >
@@ -396,120 +390,3 @@ export default function VersionCard({
 
     );
 }
-
-
-// import {
-//     Box,
-//     Chip,
-//     Typography,
-// } from "@mui/material";
-
-// export default function VersionCard({
-
-//     version,
-
-//     onClick,
-
-// }) {
-
-//     return (
-
-//         <Box
-
-//             onClick={onClick}
-
-//             sx={{
-
-//                 mb:2,
-
-//                 p:2,
-
-//                 border:"1px solid #E5E7EB",
-
-//                 borderRadius:3,
-
-//                 transition:".2s",
-
-//                 cursor:"pointer",
-
-//                 "&:hover":{
-
-//                     borderColor:"#6366F1",
-
-//                     bgcolor:"#F8FAFC"
-
-//                 }
-
-//             }}
-
-//         >
-
-//             <Box
-
-//                 sx={{
-
-//                     display:"flex",
-
-//                     justifyContent:"space-between",
-
-//                     alignItems:"center"
-
-//                 }}
-
-//             >
-
-//                 <Typography
-//                     fontWeight={600}
-//                 >
-
-//                     {version.description}
-
-//                 </Typography>
-
-//                 {version.current && (
-
-//                     <Chip
-
-//                         label="Current"
-
-//                         size="small"
-
-//                         color="success"
-
-//                     />
-
-//                 )}
-
-//             </Box>
-
-//             <Typography
-
-//                 variant="body2"
-
-//                 color="text.secondary"
-
-//                 sx={{mt:.5}}
-
-//             >
-
-//                 {version.username} • {version.created_at}
-
-//             </Typography>
-
-//             <Typography
-
-//                 variant="body2"
-
-//                 sx={{mt:1}}
-
-//             >
-
-//                 {version.summary}
-
-//             </Typography>
-
-//         </Box>
-
-//     );
-
-// }

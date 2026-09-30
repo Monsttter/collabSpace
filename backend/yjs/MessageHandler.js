@@ -72,10 +72,10 @@ export default class MessageHandler {
                         syncProtocol.messageYjsUpdate
                 ) {
 
-                    console.log(
-                        "Blocked document update from viewer:",
-                        conn.user?.id
-                    );
+                    // console.log(
+                    //     "Blocked document update from viewer:",
+                    //     conn.user?.id
+                    // );
 
                     break;
                 }

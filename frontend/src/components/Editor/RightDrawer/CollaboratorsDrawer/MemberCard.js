@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
-  Drawer,
+  // Drawer,
   Typography,
   IconButton,
-  TextField,
-  InputAdornment,
+  // TextField,
+  // InputAdornment,
   Avatar,
   Chip,
   Divider,
@@ -14,7 +14,7 @@ import {
   ListItemIcon,
   ListItemText,
   Button,
-  Paper,
+  // Paper,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -22,8 +22,8 @@ import {
 } from "@mui/material";
 
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+// import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
+// import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import { useParams } from "react-router";
@@ -115,7 +115,7 @@ const handleCloseRoleMenu = () => {
     const handleRemove= ()=>{
         handleMenuClose();
         setRemoveTarget(collaborator);
-        console.log(documentId, collaborator.id);
+        // console.log(documentId, collaborator.id);
         // dispatch(removeCollaborator({documentId, userId: collaborator.id}));
     }
 

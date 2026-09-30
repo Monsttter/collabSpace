@@ -7,9 +7,6 @@ const initialState = {
     loading: false,
     error: null,
 
-    searchQuery: "",
-    sortBy: "recent", // recent | alphabetical | created
-
     initialized: false,
 };
 
@@ -44,7 +41,7 @@ const documentSlice = createSlice({
         renameDocument(state, action) {
             const { id, title } = action.payload;
 
-            const doc = state.documents.find(d => d.id == id);
+            const doc = state.documents.find(d => d.id === id);
 
             if (doc){
                 doc.title = title;
@@ -76,6 +73,25 @@ const documentSlice = createSlice({
             }
         },
 
+        updateDocumentTimestamp(state, action) {
+            const { id, updated_at } = action.payload;
+
+            const doc = state.documents.find(
+                d => d.id === id
+            );
+
+            if (doc) {
+                doc.updated_at = updated_at;
+            }
+
+            if (
+                state.currentDocument &&
+                state.currentDocument.id === id
+            ) {
+                state.currentDocument.updated_at = updated_at;
+            }
+        },
+
         setCurrentDocument(state, action) {
             state.currentDocument = action.payload;
         },
@@ -88,23 +104,15 @@ const documentSlice = createSlice({
             );
 
             if (doc)
-                doc.isFavorite = !doc.isFavorite;
+                doc.favorite = !doc.favorite;
 
             if (
                 state.currentDocument &&
                 state.currentDocument.id === id
             ) {
-                state.currentDocument.isFavorite =
-                    !state.currentDocument.isFavorite;
+                state.currentDocument.favorite =
+                    !state.currentDocument.favorite;
             }
-        },
-
-        setSearchQuery(state, action) {
-            state.searchQuery = action.payload;
-        },
-
-        setSortBy(state, action) {
-            state.sortBy = action.payload;
         },
 
         setLoading(state, action) {
@@ -123,10 +131,9 @@ export const {
     deleteDocument,
     renameDocument,
     updateDocument,
+    updateDocumentTimestamp,
     setCurrentDocument,
     toggleFavorite,
-    setSearchQuery,
-    setSortBy,
     setLoading,
     setError,
 } = documentSlice.actions;

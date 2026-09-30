@@ -7,6 +7,7 @@ import { WebsocketProvider } from "y-websocket";
 import useDocumentEventSocket from "./useDocumentEventSocket";
 import useCommentSocket from "./useCommentSocket";
 import { versionCreatedRealtime } from "../../../store/versions/versionSlice";
+import { updateDocumentTimestamp } from "../../../store/documents/documentSlice";
 
 const COLORS = [
   "#2563EB",
@@ -136,7 +137,15 @@ export default function useCollaboration() {
                 );
 
             }
-        },
+            if (event.type === "document-updated") {
+                dispatch(
+                    updateDocumentTimestamp({
+                        id: event.documentId,
+                        updated_at: event.updatedAt,
+                    })
+                );
+            }
+        },// eslint-disable-next-line
         [
             recreateCollaboration
         ]
@@ -149,7 +158,7 @@ export default function useCollaboration() {
     if (!ready) return;
 
     const handleAccessRevoked = () => {
-      console.log("Document access revoked");
+      // console.log("Document access revoked");
 
       const provider = providerRef.current;
 

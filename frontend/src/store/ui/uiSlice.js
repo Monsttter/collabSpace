@@ -11,6 +11,8 @@ const initialState = {
     pendingSelection: null,
     
     selectedComment: null,
+
+    themeMode: localStorage.getItem("collabspace-theme") || "light",
 };
 
 const uiSlice = createSlice({
@@ -23,7 +25,7 @@ const uiSlice = createSlice({
 
         toggleDrawer(state, action) {
 
-            state.drawer = state.drawer==action.payload ? null : action.payload;
+            state.drawer = state.drawer === action.payload ? null : action.payload;
 
         },
         
@@ -63,6 +65,10 @@ const uiSlice = createSlice({
 
         },
 
+        toggleTheme(state) {
+            state.themeMode = state.themeMode === "dark" ? "light" : "dark";
+        },
+
     },
 
 });
@@ -82,6 +88,8 @@ export const {
     setSelectedComment,
 
     clearSelectedComment,
+
+    toggleTheme,
 
 } = uiSlice.actions;
 

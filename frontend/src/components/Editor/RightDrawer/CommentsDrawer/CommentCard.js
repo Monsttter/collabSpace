@@ -11,7 +11,7 @@ import {
 import { useSelector } from "react-redux";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import formatRelativeTime from "../../../../utils/formatRelativeTime";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+// import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useDispatch } from "react-redux";
 import { resolveCommentPositions } from "../../../../utils/commentPositions";
 import { useCollaborationContext } from "../../context/CollaborationContext";
@@ -49,7 +49,7 @@ export default function CommentCard({ comment, editor }) {
   const dispatch = useDispatch();
 
   const {
-    provider,
+    // provider,
 
     ydoc,
   } = useCollaborationContext();
@@ -252,18 +252,18 @@ export default function CommentCard({ comment, editor }) {
         mb: 1,
 
         border: "1px solid",
-        borderColor: isMine ? "#DCE5FF" : "#E5E7EB",
+        borderColor: "divider",
 
         borderRadius: 0.5,
 
-        bgcolor: isMine ? "#F8FAFF" : "#FFFFFF",
+        bgcolor: isMine ? "action.selected" : "background.paper",
 
         cursor: "pointer",
 
         transition: "background-color 0.15s ease",
 
         "&:hover": {
-          bgcolor: isMine ? "#F3F6FF" : "#F8FAFC",
+          bgcolor: isMine ? "action.selected" : "action.hover",
         },
       }}
     >
@@ -283,7 +283,7 @@ export default function CommentCard({ comment, editor }) {
             variant="body2"
             sx={{
               fontWeight: 700,
-              color: "#1F2937",
+              color: "text.primary",
               lineHeight: 1.2,
             }}
           >
@@ -295,7 +295,7 @@ export default function CommentCard({ comment, editor }) {
               variant="caption"
               sx={{
                 paddingLeft: "5px",
-                color: "#9CA3AF",
+                color: "text.secondary",
                 fontSize: "0.7rem",
                 lineHeight: 1.2,
               }}
@@ -307,7 +307,7 @@ export default function CommentCard({ comment, editor }) {
               component="span"
               sx={{
                 paddingLeft: "5px",
-                color: "#9CA3AF",
+                color: "text.secondary",
                 fontSize: "0.7rem",
                 lineHeight: 1.2,
               }}
@@ -445,9 +445,10 @@ export default function CommentCard({ comment, editor }) {
 
             borderRadius: 0.5,
 
-            bgcolor: "#F1F5F9",
+            bgcolor: "action.hover",
 
-            border: "1px solid #E2E8F0",
+            border: "1px solid",
+            borderColor: "divider",
 
             overflow: "hidden",
 
@@ -459,7 +460,7 @@ export default function CommentCard({ comment, editor }) {
             sx={{
               width: 3,
               flexShrink: 0,
-              bgcolor: "#94A3B8",
+              bgcolor: "text.secondary",
             }}
           />
 
@@ -469,7 +470,7 @@ export default function CommentCard({ comment, editor }) {
               px: 1,
               py: 0.6,
 
-              color: "#475569",
+              color: "text.secondary",
 
               fontSize: "0.72rem",
 

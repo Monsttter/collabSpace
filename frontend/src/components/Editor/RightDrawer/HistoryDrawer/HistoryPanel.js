@@ -1,7 +1,7 @@
 import {
     Box,
     Typography,
-    Divider,
+    // Divider,
 } from "@mui/material";
 
 import VersionCard from "./VersionCard";
@@ -44,7 +44,8 @@ export default function HistoryPanel() {
                 sx={{
                     px: 3,
                     py: 2,
-                    borderBottom: "1px solid #E5E7EB",
+                    borderBottom: 1,
+                    borderColor: "divider",
                 }}
             >
                 <Typography

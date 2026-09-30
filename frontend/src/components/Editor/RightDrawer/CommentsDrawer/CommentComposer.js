@@ -28,7 +28,7 @@ export default function CommentComposer({editor}) {
 
   const {
   
-          provider,
+          // provider,
   
           ydoc
   
@@ -104,8 +104,9 @@ export default function CommentComposer({editor}) {
   return (
     <Box
       sx={{
-        borderTop: "1px solid #E5E7EB",
-        bgcolor: "#FFFFFF",
+        borderTop: 1,
+        borderColor: "divider",
+        bgcolor: "background.paper",
         px: 1.5,
         py: 1.25,
       }}
@@ -123,9 +124,10 @@ export default function CommentComposer({editor}) {
 
             py: 0.7,
 
-            bgcolor: "#F1F5F9",
+            bgcolor: "action.hover",
 
-            border: "1px solid #E2E8F0",
+            border: "1px solid",
+            borderColor: "divider",
 
             borderRadius: 1.5,
 
@@ -149,7 +151,7 @@ export default function CommentComposer({editor}) {
               flex: 1,
               minWidth: 0,
 
-              color: "#475569",
+              color: "text.secondary",
 
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -201,7 +203,7 @@ export default function CommentComposer({editor}) {
           sx={{
             "& .MuiOutlinedInput-root": {
               borderRadius: 2,
-              bgcolor: "#F8FAFC",
+              bgcolor: "action.hover",
             },
           }}
         />
@@ -220,102 +222,3 @@ export default function CommentComposer({editor}) {
     </Box>
   );
 }
-
-// import {
-//   Avatar,
-//   Box,
-//   Button,
-//   IconButton,
-//   Paper,
-//   TextField,
-//   Typography,
-// } from "@mui/material";
-// import { clearPendingSelection } from "../../../../store/ui/uiSlice";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useParams } from "react-router";
-// import useComments from "../../hooks/useComments";
-// import { useState } from "react";
-// import { Close } from "@mui/icons-material";
-// import { createComment } from "../../../../store/comments/commentsThunks";
-
-// export default function CommentComposer() {
-//   const { id: documentId } = useParams();
-//   const [message, setMessage] = useState("");
-//   const dispatch = useDispatch();
-//   // const { createComment } = useComments(documentId);
-
-//   const { pendingSelection } = useSelector((state) => state.ui);
-
-//   const handleSubmit = async () => {
-//     dispatch(createComment({documentId,comment:{
-//       message,
-
-//       type: pendingSelection ? "selection" : "page",
-
-//       anchor: pendingSelection?.anchor ?? null,
-
-//       head: pendingSelection?.head ?? null,
-
-//       quotedText: pendingSelection?.text ?? null,
-//     }}));
-
-//     dispatch(clearPendingSelection());
-
-//     setMessage("");
-//   };
-
-//   return (
-//     <Box
-//       sx={{
-//         display: "flex",
-//         gap: 2,
-//         p: 2,
-//       }}
-//     >
-//       <Avatar
-//         sx={{
-//           width: 36,
-//           height: 36,
-//         }}
-//       >
-//         R
-//       </Avatar>
-
-//       <Box sx={{ flex: 1 }}>
-//         {pendingSelection && (
-//           <Paper sx={{ display: "flex" }}>
-//             <Typography>{pendingSelection.text}</Typography>
-
-//             <IconButton onClick={() => dispatch(clearPendingSelection())}>
-//               <Close />
-//             </IconButton>
-//           </Paper>
-//         )}
-//         <TextField
-//           fullWidth
-//           multiline
-//           minRows={2}
-//           value={message}
-//           placeholder="Leave a comment..."
-//           onChange={(e) => setMessage(e.target.value)}
-//         />
-
-//         <Box
-//           sx={{
-//             display: "flex",
-//             justifyContent: "flex-end",
-//             mt: 1,
-//           }}
-//         >
-//           <Button
-//             variant="contained"
-//             onClick={handleSubmit}
-//             disabled={message.trim().length === 0}
-//           >
-//             Comment
-//           </Button>
-//         </Box>
-//       </Box>
-//     </Box>
-//   );
-// }
